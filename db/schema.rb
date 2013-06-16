@@ -11,9 +11,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130616212026) do
+ActiveRecord::Schema.define(:version => 20130616214650) do
 
-  create_table "business_users", :primary_key => "user_id", :force => true do |t|
+  create_table "business_users", :primary_key => "core_user_id", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(:version => 20130616212026) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "users", :primary_key => "user_id", :force => true do |t|
+  create_table "users", :primary_key => "core_user_id", :force => true do |t|
     t.boolean  "availability"
     t.boolean  "registered"
     t.datetime "registered_at"
