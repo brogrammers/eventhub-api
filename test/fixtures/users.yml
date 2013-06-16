@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  availability: false
+  registered: false
+  registered_at: 2013-06-16 20:53:41
+
+two:
+  availablity: false
+  registered: false
+  registered_at: 2013-06-16 20:53:41
