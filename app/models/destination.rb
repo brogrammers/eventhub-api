@@ -4,4 +4,5 @@ class Destination < ActiveRecord::Base
   has_many :voters, :class_name => 'User', :through => :votes, :source => :user
 
   belongs_to :choice, :polymorphic => :true
+  belongs_to :group
 end

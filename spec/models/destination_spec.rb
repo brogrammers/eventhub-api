@@ -6,6 +6,8 @@ describe Destination do
     Destination.destroy_all
     Group.destroy_all
     User.destroy_all
+    Event.destroy_all
+    Place.destroy_all
   end
 
   it 'should have a creator' do
@@ -42,4 +44,20 @@ describe Destination do
   it 'should destroy votes when destination is destoyed' do
 
   end
+
+  it 'should add event to choice ' do
+    dest = Destination.new
+    event = Event.new
+    dest.save!
+    event.save!
+    dest.choice = event
+    dest.save!
+    dest.choice.should equal(event)
+    event.destinations.size.should eq(1)
+  end
+
+  it 'should add event to choice' do
+
+  end
+
 end
