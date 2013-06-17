@@ -8,7 +8,9 @@
 /.bundle
 
 .sass-cache
-.idea
+.idea/
+.idea/*
+.idea/workspace.xml
 test
 
 # Ignore the default SQLite database.
