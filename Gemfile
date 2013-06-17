@@ -39,3 +39,5 @@ gem 'jquery-rails'
 
 gem 'rabl'
 gem 'multiple_table_inheritance'
+gem 'rspec'
+gem 'rspec-rails'
