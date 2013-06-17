@@ -1,0 +1,7 @@
+one:
+  name: User
+  availability: true
+  registered: true
+  location:
+    latitude: 155.123456789
+    longitude: 6.23456323456

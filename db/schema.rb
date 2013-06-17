@@ -86,8 +86,10 @@ ActiveRecord::Schema.define(:version => 20130617132010) do
   create_table "locations", :force => true do |t|
     t.float    "latitude"
     t.float    "longitude"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
   create_table "messages", :force => true do |t|
@@ -126,8 +128,10 @@ ActiveRecord::Schema.define(:version => 20130617132010) do
     t.string   "description"
     t.string   "city"
     t.string   "country"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
   create_table "users", :primary_key => "core_user_id", :force => true do |t|
@@ -136,6 +140,8 @@ ActiveRecord::Schema.define(:version => 20130617132010) do
     t.datetime "registered_at"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
   create_table "votes", :force => true do |t|
@@ -143,6 +149,8 @@ ActiveRecord::Schema.define(:version => 20130617132010) do
     t.datetime "updated_at",     :null => false
     t.integer  "user_id"
     t.integer  "destination_id"
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
 end
