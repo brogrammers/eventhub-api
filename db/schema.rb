@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130616214650) do
+ActiveRecord::Schema.define(:version => 20130616220514) do
 
   create_table "business_users", :primary_key => "core_user_id", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -81,8 +81,10 @@ ActiveRecord::Schema.define(:version => 20130616214650) do
   create_table "locations", :force => true do |t|
     t.float    "latitude"
     t.float    "longitude"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
   create_table "messages", :force => true do |t|
@@ -121,16 +123,20 @@ ActiveRecord::Schema.define(:version => 20130616214650) do
     t.string   "description"
     t.string   "city"
     t.string   "country"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
   create_table "users", :primary_key => "core_user_id", :force => true do |t|
     t.boolean  "availability"
     t.boolean  "registered"
     t.datetime "registered_at"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "locationable_id"
+    t.string   "locationable_type"
   end
 
 end
