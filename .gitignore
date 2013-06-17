@@ -12,6 +12,7 @@
 .idea/*
 .idea/workspace.xml
 test
+schema.rb
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
