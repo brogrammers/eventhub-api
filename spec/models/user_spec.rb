@@ -6,12 +6,16 @@ describe User do
     @users = YAML.load_file File.join(File.dirname(__FILE__), '..', 'fixtures', 'users.yml')
   end
 
+  after :all do
+    User.destroy_all
+  end
+
   it 'should not create a new invalid user record' do
     user = User.new
     expect { user.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it 'should pass validation for a new invalid user record' do
+  it 'should not pass validation for a new invalid user record' do
     user = User.new
     expect(user.valid?).to be_false
     expect(user.errors.full_messages.size).to eq(4)
@@ -26,7 +30,7 @@ describe User do
     expect(user.save!).to be_true
   end
 
-  it 'should add a valid location to the user record' do
+  it 'should add a valid location to a user record' do
     user = User.new
     user.name = @users['one']['name']
     user.availability = @users['one']['availability']
