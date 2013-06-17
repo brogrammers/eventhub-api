@@ -9,6 +9,7 @@
 
 .sass-cache
 .idea
+test
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
