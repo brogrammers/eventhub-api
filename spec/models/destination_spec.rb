@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Destination do
 
-  after :all do
+  after :each do
     Destination.destroy_all
     Group.destroy_all
     User.destroy_all
@@ -42,10 +42,19 @@ describe Destination do
   end
 
   it 'should destroy votes when destination is destoyed' do
-
+    dest = Destination.new
+    user1 = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    user2 = User.new :name => 'Rob', :availability => true, :registered => true, :registered_at => Time.now
+    dest.voters << user1
+    dest.voters << user2
+    user1.save!
+    user2.save!
+    dest.save!
+    dest.destroy
+    Vote.all.size.should eq(0)
   end
 
-  it 'should add event to choice ' do
+  it 'should add event to choice' do
     dest = Destination.new
     event = Event.new
     dest.save!
@@ -56,8 +65,15 @@ describe Destination do
     event.destinations.size.should eq(1)
   end
 
-  it 'should add event to choice' do
-
+  it 'should add place to choice' do
+    dest = Destination.new
+    place = Place.new
+    dest.save!
+    place.save!
+    dest.choice = place
+    dest.save!
+    dest.choice.should equal(place)
+    place.destinations.size.should eq(1)
   end
 
 end
