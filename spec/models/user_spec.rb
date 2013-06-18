@@ -49,7 +49,7 @@ describe User do
 
   #USER -> GROUP MEMBERSHIP
 
-  it 'should be possible to add group to the user' do
+  it 'should be possible to add group (as membership) to the user' do
     user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
     group = Group.new
     user.groups_member_of << group
@@ -61,7 +61,7 @@ describe User do
 
   #USER -> GROUP MEMBERSHIP -> TRACKING
 
-  it 'should be possible to remove group from the user' do
+  it 'should be possible to remove group (as membership) from the user' do
     user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
     group = Group.new
     user.groups_member_of << group
@@ -160,4 +160,19 @@ describe User do
     group1.invited.size.should eq(0)
     group2.invited.size.should eq(0)
   end
+
+  #USER - GROUP POSSESION
+
+  it 'should be possible to add group to the user' do
+
+  end
+
+  it 'should be possible to remove grom from the user' do
+
+  end
+
+  it 'should remove all groups of that user if the user is destroyed' do
+
+  end
+
 end
