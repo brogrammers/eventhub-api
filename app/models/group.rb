@@ -3,6 +3,5 @@ class Group < ActiveRecord::Base
   has_many :destinations, :dependent => :destroy
 
   has_many :group_members
-  has_many :users, :through => :group_members
-
+  has_many :members, :through => :group_members, :source => :user
 end
