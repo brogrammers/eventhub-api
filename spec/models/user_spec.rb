@@ -8,6 +8,7 @@ describe User do
 
   after :all do
     User.destroy_all
+    Group.destroy_all
   end
 
   it 'should not create a new invalid user record' do
@@ -42,6 +43,52 @@ describe User do
     user.save!
     expect(user.location.latitude).to eq(@users['one']['location']['latitude'])
     expect(user.location.longitude).to eq(@users['one']['location']['longitude'])
+  end
+
+  it 'should be possible to add group to the user' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group = Group.new
+    user.groups << group
+    group.save!
+    user.save!
+    user.groups.should include(group)
+    group.members.should include(user)
+  end
+
+  it 'should be possible to remove group from the user' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group = Group.new
+    user.groups << group
+    group.save!
+    user.save!
+    user.groups.delete group
+    user.save!
+    user.groups.should_not include(group)
+    group.members.should_not include(user)
+  end
+
+  it 'should be possible to set user as trackable for the group' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group = Group.new
+    user.groups << group
+    group_membership = nil
+    user.save!
+    group.save!
+    user.group_memberships.each do |membership|
+      next if membership.group != group
+      membership.trackable = true
+      group_membership = membership
+    end
+    group_membership.save!
+    group_membership.trackable.should eq(false)
+  end
+
+  it 'should be possible to set user as utrackable for the group' do
+
+  end
+
+  it 'should destroy all memberships when the user is destroyed' do
+
   end
 
 end

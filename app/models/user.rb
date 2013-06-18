@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :inverse_friends, :through => :inverse_friendships, :source => :friend
 
   has_many :group_memberships, :class_name => 'GroupMember'
-  has_many :groups, :through => :group_members
+  has_many :groups, :through => :group_memberships
 
   validates :availability, :registered, :registered_at, :presence => true
 end
