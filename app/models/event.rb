@@ -4,4 +4,7 @@ class Event < ActiveRecord::Base
   #detinations stuff, save destination object & reload place before you can see this being updated,
   #make sure both destination AND event have their id's assigned
   has_many :destinations, :as => :choice, :dependent => :destroy
+
+  has_many :comments, :as => :commentable, :dependent => :destroy
+  has_many :offers ,:as => :offerer, :dependent => :destroy
 end
