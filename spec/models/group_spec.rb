@@ -8,6 +8,7 @@ describe Group do
 
   after :all do
     Group.destroy_all
+    Destination.destroy_all
   end
 
   it 'should create a new valid group object' do

@@ -10,8 +10,11 @@ class User < ActiveRecord::Base
   has_many :inverse_friendships, :class_name => 'Friendship', :foreign_key => "friend_id"
   has_many :inverse_friends, :through => :inverse_friendships, :source => :friend
 
-  has_many :group_memberships, :class_name => 'GroupMember'
-  has_many :groups, :through => :group_memberships
+  has_many :group_memberships, :class_name => 'GroupMember', :dependent => :destroy
+  has_many :groups_member_of, :source => :group, :through => :group_memberships
+
+  has_many :group_invitations, :class_name => 'PendingMember', :dependent => :destroy
+  has_many :groups_invited_to, :source => :group, :through => :group_invitations
 
   validates :availability, :registered, :registered_at, :presence => true
 end
