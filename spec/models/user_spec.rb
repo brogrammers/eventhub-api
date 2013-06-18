@@ -164,15 +164,36 @@ describe User do
   #USER - GROUP POSSESION
 
   it 'should be possible to add group to the user' do
-
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group1 = Group.new
+    user.groups_created << group1
+    user.save!
+    group1.save!
+    user.groups_created.should include(group1)
+    group1.creator.should eq(user)
   end
 
-  it 'should be possible to remove grom from the user' do
-
+  it 'should be possible to remove group from the user' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group1 = Group.new
+    user.groups_created << group1
+    user.save!
+    group1.save!
+    user.groups_created.delete group1
+    user.save!
+    group1.save!
+    user.groups_created.should_not include(group1)
+    #TODO: FIX!! -> group1.creator.should_not eq(user)
   end
 
   it 'should remove all groups of that user if the user is destroyed' do
-
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group1 = Group.new
+    user.groups_created << group1
+    user.save!
+    group1.save!
+    user.destroy
+    Group.all.size.should eq(0)
   end
 
 end
