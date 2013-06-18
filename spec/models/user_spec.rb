@@ -147,7 +147,17 @@ describe User do
   end
 
   it 'should remove all invitations when the user is destroyed' do
-
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    group1 = Group.new
+    group2 = Group.new
+    user.groups_invited_to << group1
+    user.groups_invited_to << group2
+    user.save!
+    group1.save!
+    group2.save!
+    user.destroy
+    PendingMember.all.size.should eq(0)
+    group1.invited.size.should eq(0)
+    group2.invited.size.should eq(0)
   end
-
 end

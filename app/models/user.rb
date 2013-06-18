@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   has_many :inverse_friendships, :class_name => 'Friendship', :foreign_key => "friend_id"
   has_many :inverse_friends, :through => :inverse_friendships, :source => :friend
 
+  has_many :groups_created, :class_name => 'Group', :dependent => :destroy
+
   has_many :group_memberships, :class_name => 'GroupMember', :dependent => :destroy
   has_many :groups_member_of, :source => :group, :through => :group_memberships
 
