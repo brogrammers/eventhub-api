@@ -18,5 +18,7 @@ class User < ActiveRecord::Base
   has_many :group_invitations, :class_name => 'PendingMember', :dependent => :destroy
   has_many :groups_invited_to, :source => :group, :through => :group_invitations
 
+  has_many :location_posts, :dependent => :destroy
+
   validates :availability, :registered, :registered_at, :presence => true
 end

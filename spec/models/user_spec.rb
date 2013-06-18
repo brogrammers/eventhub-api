@@ -11,6 +11,7 @@ describe User do
     Group.destroy_all
     GroupMember.destroy_all
     PendingMember.destroy_all
+    LocationPost.destroy_all
   end
 
   it 'should not create a new invalid user record' do
@@ -194,6 +195,39 @@ describe User do
     group1.save!
     user.destroy
     Group.all.size.should eq(0)
+  end
+
+  it 'should be possible to add location post to user' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    post = LocationPost.new
+    user.location_posts << post
+    user.save!
+    post.save!
+    user.location_posts.should include(post)
+    post.user.should eq(user)
+  end
+
+  it 'should be possible to remove location post from user' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    post = LocationPost.new
+    user.location_posts << post
+    user.save!
+    post.save!
+    user.location_posts.delete post
+    user.save!
+    post.save!
+    user.location_posts.should_not include(post)
+    #TODO: fix -> post.user.should_not eq(user)
+  end
+
+  it 'should destroy all posts when user is destroyed' do
+    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    post = LocationPost.new
+    user.location_posts << post
+    user.save!
+    post.save!
+    user.destroy
+    LocationPost.all.size.should eq(0)
   end
 
 end
