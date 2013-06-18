@@ -1,0 +1,5 @@
+one:
+  name: event1
+  description: desc1
+  start_time: <%= Time.now %>
+  end_time: <%= Time.now %>

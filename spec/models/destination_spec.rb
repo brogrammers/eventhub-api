@@ -1,79 +1,58 @@
 require 'spec_helper'
 
 describe Destination do
-
-  after :each do
-    Destination.destroy_all
-    Group.destroy_all
-    User.destroy_all
-    Event.destroy_all
-    Place.destroy_all
-  end
+  fixtures :core_users, :users, :destinations, :groups, :events, :places
 
   it 'should have a creator' do
-    dest = Destination.new
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    user.save!
-    dest.creator = user
+    dest = destinations :one
+    dest.creator = users :one
     dest.save!
-    dest.creator.should equal(user)
+    dest.creator.should equal(users(:one))
   end
 
   it 'should have voters' do
-    dest = Destination.new
-    user1 = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    user2 = User.new :name => 'Rob', :availability => true, :registered => true, :registered_at => Time.now
-    dest.voters << user1
-    dest.voters << user2
-    user1.save!
-    user2.save!
+    dest = destinations :one
+    dest.voters << users(:one)
+    dest.voters << users(:two)
     dest.save!
-    dest.voters.size.should eq(2)
+    dest.voters.size.should == 2
   end
 
   it 'should belong to a group' do
-    dest = Destination.new
-    group = Group.new
+    dest = destinations :one
+    group = groups :one
     dest.group = group
     group.save!
     dest.save!
     dest.group.should equal(group)
-    group.destinations.size.should eq(1)
+    group.destinations.size.should == 1
   end
 
-  it 'should destroy votes when destination is destoyed' do
-    dest = Destination.new
-    user1 = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    user2 = User.new :name => 'Rob', :availability => true, :registered => true, :registered_at => Time.now
-    dest.voters << user1
-    dest.voters << user2
-    user1.save!
-    user2.save!
+  it 'should destroy votes when destination is destroyed' do
+    dest = destinations :one
+    dest.voters << users(:one)
+    dest.voters << users(:two)
     dest.save!
     dest.destroy
-    Vote.all.size.should eq(0)
+    Vote.all.size.should == 0
   end
 
   it 'should add event to choice' do
-    dest = Destination.new
-    event = Event.new
-    dest.save!
-    event.save!
+    dest = destinations :one
+    event = events :one
     dest.choice = event
     dest.save!
     dest.choice.should equal(event)
-    event.destinations.size.should eq(1)
+    event.destinations.size.should == 1
   end
 
   it 'should add place to choice' do
-    dest = Destination.new
-    place = Place.new
-    dest.save!
-    place.save!
+    dest = destinations :one
+    place = places :one
     dest.choice = place
     dest.save!
     dest.choice.should equal(place)
-    place.destinations.size.should eq(1)
+    place.destinations.size.should == 1
   end
 
 end
