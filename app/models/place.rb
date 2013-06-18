@@ -6,4 +6,7 @@ class Place < ActiveRecord::Base
   #detinations stuff, save destination object & reload place before you can see this being updated
   #make sure both destination AND place have their id's assigned
   has_many :destinations, :as => :choice, :foreign_key => 'choice_id', :dependent => :destroy
+
+  has_many :offers ,:as => :offerer, :dependent => :destroy
+
 end
