@@ -1,10 +1,7 @@
 require 'spec_helper'
 
 describe User do
-  fixtures :users, :core_users, :groups, :location_posts
-
-  LATITUDE  = 53.344103999999990000
-  LONGITUDE = -6.267493699999932000
+  fixtures :users, :core_users, :groups, :location_posts, :locations
 
   it 'should not create a new invalid user record' do
     user = User.new
@@ -18,10 +15,9 @@ describe User do
 
   it 'should add a valid location to a user record' do
     user = users(:one)
-    user.location = Location.create :latitude => LATITUDE, :longitude => LONGITUDE
+    user.location = locations :one
     user.save!
-    user.location.latitude.should == LATITUDE
-    user.location.longitude.should == LONGITUDE
+    user.location.should == locations(:one)
   end
 
   context 'USER -> GROUP MEMBERSHIP' do
