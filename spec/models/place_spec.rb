@@ -1,36 +1,30 @@
 require 'spec_helper'
 
 describe Place do
-
-  before :each do
-    Place.destroy_all
-    Comment.destroy_all
-    Offer.destroy_all
-  end
+  fixtures :places, :comments, :offers
 
   it 'should possible to comment on a place' do
-    place = Place.new
-    comment = Comment.new
+    place = places :one
+    comment = comments :one
     place.comments << comment
     comment.save!
     place.save!
-    place.comments.size.should eq(1)
+    place.comments.size.should == 1
   end
 
-  it 'should destroy all comments on that place when the place is destroyed' do
-    place = Place.new
-    comment = Comment.new
+  it 'should destroy all comments on that place once the place is destroyed' do
+    place = places :one
+    comment = comments :one
     place.comments << comment
     comment.save!
     place.save!
     place.destroy
-    Comment.all.size.should eq(0)
+    expect { Comment.find comment.id }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it 'should be possbile to add an offer' do
-    place = Place.new
-    offer1 = Offer.new
-    offer2 = Offer.new
+    place = places :one
+    offer1, offer2 = offers(:one), offers(:two)
     place.offers << offer1
     place.offers << offer2
     place.save!
@@ -38,14 +32,13 @@ describe Place do
     offer2.save!
     place.offers.should include(offer1)
     place.offers.should include(offer2)
-    offer1.offerer.should eq(place)
-    offer2.offerer.should eq(place)
+    offer1.offerer.should == place
+    offer2.offerer.should == place
   end
 
   it 'should be possible to remove an offer' do
-    place = Place.new
-    offer1 = Offer.new
-    offer2 = Offer.new
+    place = places :one
+    offer1, offer2 = offers(:one), offers(:two)
     place.offers << offer1
     place.offers << offer2
     place.save!
@@ -53,20 +46,19 @@ describe Place do
     offer2.save!
     place.offers.delete offer1
     place.offers.delete offer2
-    place.offers.size.should eq(0)
+    place.offers.size.should == 0
   end
 
-  it 'should destroy offers when the place is destroyed' do
-    place = Place.new
-    offer1 = Offer.new
-    offer2 = Offer.new
+  it 'should destroy offers once the place is destroyed' do
+    place = places :one
+    offer1, offer2 = offers(:one), offers(:two)
     place.offers << offer1
     place.offers << offer2
     place.save!
     offer1.save!
     offer2.save!
     place.destroy
-    Offer.all.size.should eq(0)
+    expect { Offer.find offer1.id; Offer.find offer2.id }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
 end

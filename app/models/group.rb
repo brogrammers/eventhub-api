@@ -2,6 +2,8 @@ class Group < ActiveRecord::Base
   attr_accessible :description, :name
   has_many :destinations, :dependent => :destroy
 
+  validates :description, :name, :presence => true
+
   belongs_to :creator, :class_name => 'User', :foreign_key => 'user_id'
 
   has_many :group_members, :dependent => :destroy
