@@ -12,7 +12,7 @@ describe Place do
     place.comments.size.should == 1
   end
 
-  it 'should destroy all comments on that place when the place is destroyed' do
+  it 'should destroy all comments on that place once the place is destroyed' do
     place = places :one
     comment = comments :one
     place.comments << comment
@@ -49,7 +49,7 @@ describe Place do
     place.offers.size.should == 0
   end
 
-  it 'should destroy offers when the place is destroyed' do
+  it 'should destroy offers once the place is destroyed' do
     place = places :one
     offer1, offer2 = offers(:one), offers(:two)
     place.offers << offer1
