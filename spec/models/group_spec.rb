@@ -8,7 +8,7 @@ describe Group do
     expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it 'should attach a new destination' do
+  it 'should add a new destination to a group' do
     destination = destinations :one
     group = groups :one
     group.destinations << destination
@@ -16,7 +16,7 @@ describe Group do
     group.destinations.size.should == 1
   end
 
-  it 'should delete all destinations if group is deleted' do
+  it 'should delete all destinations once a group is deleted' do
     group = groups :one
     destination = destinations :one
     group.destinations << destination
