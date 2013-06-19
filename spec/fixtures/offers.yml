@@ -1,0 +1,15 @@
+one:
+  name: offer
+  description: desc
+  price: 12.43
+  currency: EUR
+  start_time: <%= Time.now %>
+  end_time: <%= Time.now %>
+
+two:
+  name: offer2
+  description: desc2
+  price: 12.43
+  currency: EUR
+  start_time: <%= Time.now %>
+  end_time: <%= Time.now %>

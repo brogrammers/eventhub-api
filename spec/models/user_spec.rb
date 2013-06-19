@@ -1,18 +1,7 @@
 require 'spec_helper'
 
 describe User do
-
-  before :all do
-    @users = YAML.load_file File.join(File.dirname(__FILE__), '..', 'fixtures', 'users.yml')
-  end
-
-  after :each do
-    User.destroy_all
-    Group.destroy_all
-    GroupMember.destroy_all
-    PendingMember.destroy_all
-    LocationPost.destroy_all
-  end
+  fixtures :users, :core_users, :groups, :location_posts, :locations
 
   it 'should not create a new invalid user record' do
     user = User.new
@@ -21,62 +10,49 @@ describe User do
 
   it 'should not pass validation for a new invalid user record' do
     user = User.new
-    expect(user.valid?).to be_false
-    expect(user.errors.full_messages.size).to eq(4)
-  end
-
-  it 'should create a new valid user record' do
-    user = User.new
-    user.name = @users['one']['name']
-    user.availability = @users['one']['availability']
-    user.registered = @users['one']['registered']
-    user.registered_at = Time.now
-    expect(user.save!).to be_true
+    user.valid?.should be_false
   end
 
   it 'should add a valid location to a user record' do
-    user = User.new
-    user.name = @users['one']['name']
-    user.availability = @users['one']['availability']
-    user.registered = @users['one']['registered']
-    user.registered_at = Time.now
-    user.location = Location.new
-    user.location.latitude = @users['one']['location']['latitude']
-    user.location.longitude = @users['one']['location']['longitude']
+    user = users(:one)
+    user.location = locations :one
     user.save!
-    expect(user.location.latitude).to eq(@users['one']['location']['latitude'])
-    expect(user.location.longitude).to eq(@users['one']['location']['longitude'])
+    user.location.should == locations(:one)
   end
 
-  #USER -> GROUP MEMBERSHIP
+  context 'USER -> GROUP MEMBERSHIP' do
 
-  it 'should be possible to add group (as membership) to the user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
-    user.groups_member_of << group
-    group.save!
-    user.save!
-    user.groups_member_of.should include(group)
-    group.members.should include(user)
+    it 'should be possible to add group (as membership) to the user' do
+      user = users :one
+      group = groups :one
+      user.groups_member_of << group
+      group.save!
+      user.save!
+      user.groups_member_of.should include(group)
+      group.members.should include(user)
+    end
+
   end
 
-  #USER -> GROUP MEMBERSHIP -> TRACKING
+  context 'USER -> GROUP MEMBERSHIP -> TRACKING' do
 
-  it 'should be possible to remove group (as membership) from the user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
-    user.groups_member_of << group
-    group.save!
-    user.save!
-    user.groups_member_of.delete group
-    user.save!
-    user.groups_member_of.should_not include(group)
-    group.members.should_not include(user)
+    it 'should be possible to remove group (as membership) from the user' do
+      user = users :one
+      group = groups :one
+      user.groups_member_of << group
+      group.save!
+      user.save!
+      user.groups_member_of.delete group
+      user.save!
+      user.groups_member_of.should_not include(group)
+      group.members.should_not include(user)
+    end
+
   end
 
   it 'should be possible to set user as trackable for the group' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+    user = users :one
+    group = groups :one
     user.groups_member_of << group
     group_membership = nil
     user.save!
@@ -87,12 +63,12 @@ describe User do
       group_membership = membership
     end
     group_membership.save!
-    group_membership.trackable.should eq(true)
+    group_membership.trackable.should be_true
   end
 
-  it 'should be possible to set user as utrackable for the group' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+  it 'should be possible to set user as untrackable for the group' do
+    user = users :one
+    group = groups :one
     user.groups_member_of << group
     group_membership = nil
     user.save!
@@ -105,39 +81,41 @@ describe User do
     group_membership.save!
     group_membership.trackable = false
     group_membership.save!
-    group_membership.trackable.should eq(false)
+    group_membership.trackable.should be_false
   end
 
   it 'should destroy all memberships when the user is destroyed' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group1 = Group.new
-    group2 = Group.new
+    user = users :one
+    group1 = groups :one
+    group2 = groups :two
     user.groups_member_of << group1
     user.groups_member_of << group2
     user.save!
     group1.save!
     group2.save!
     user.destroy
-    GroupMember.all.size.should eq(0)
-    group1.members.size.should eq(0)
-    group2.members.size.should eq(0)
+    GroupMember.all.size.should == 0
+    group1.members.size.should == 0
+    group2.members.size.should == 0
   end
 
-  #USER -> GROUP INVITATIONS
+  context 'USER -> GROUP INVITATIONS' do
 
-  it 'should be possible to add invitation to user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
-    user.groups_invited_to << group
-    group.save!
-    user.save!
-    user.groups_invited_to.should include(group)
-    group.invited.should include(user)
+    it 'should be possible to add invitation to user' do
+      user = users :one
+      group = groups :one
+      user.groups_invited_to << group
+      group.save!
+      user.save!
+      user.groups_invited_to.should include(group)
+      group.invited.should include(user)
+    end
+
   end
 
   it 'should be possible to remove invitation from user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+    user = users :one
+    group = groups :one
     user.groups_invited_to << group
     group.save!
     user.save!
@@ -147,36 +125,38 @@ describe User do
     group.invited.should_not include(user)
   end
 
-  it 'should remove all invitations when the user is destroyed' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group1 = Group.new
-    group2 = Group.new
+  it 'should remove all invitations once the user is destroyed' do
+    user = users :one
+    group1 = groups :one
+    group2 = groups :two
     user.groups_invited_to << group1
     user.groups_invited_to << group2
     user.save!
     group1.save!
     group2.save!
     user.destroy
-    PendingMember.all.size.should eq(0)
-    group1.invited.size.should eq(0)
-    group2.invited.size.should eq(0)
+    PendingMember.all.size.should == 0
+    group1.invited.size.should == 0
+    group2.invited.size.should == 0
   end
 
-  #USER - GROUP POSSESION
+  context 'USER - GROUP POSSESSION' do
 
-  it 'should be possible to add group to the user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group1 = Group.new
-    user.groups_created << group1
-    user.save!
-    group1.save!
-    user.groups_created.should include(group1)
-    group1.creator.should eq(user)
+    it 'should be possible to add group to the user' do
+      user = users :one
+      group1 = groups :one
+      user.groups_created << group1
+      user.save!
+      group1.save!
+      user.groups_created.should include(group1)
+      group1.creator.should == user
+    end
+
   end
 
   it 'should be possible to remove group from the user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group1 = Group.new
+    user = users :one
+    group1 = groups :one
     user.groups_created << group1
     user.save!
     group1.save!
@@ -188,28 +168,28 @@ describe User do
   end
 
   it 'should remove all groups of that user if the user is destroyed' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group1 = Group.new
+    user = users :one
+    group1 = groups :one
     user.groups_created << group1
     user.save!
     group1.save!
     user.destroy
-    Group.all.size.should eq(0)
+    expect { Group.find group1.id }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it 'should be possible to add location post to user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
+    user = users :one
     post = LocationPost.new
     user.location_posts << post
     user.save!
     post.save!
     user.location_posts.should include(post)
-    post.user.should eq(user)
+    post.user.should == user
   end
 
   it 'should be possible to remove location post from user' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    post = LocationPost.new
+    user = users :one
+    post = location_posts :one
     user.location_posts << post
     user.save!
     post.save!
@@ -220,14 +200,14 @@ describe User do
     #TODO: fix -> post.user.should_not eq(user)
   end
 
-  it 'should destroy all posts when user is destroyed' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    post = LocationPost.new
+  it 'should destroy all location posts once the user is destroyed' do
+    user = users :one
+    post = location_posts :one
     user.location_posts << post
     user.save!
     post.save!
     user.destroy
-    LocationPost.all.size.should eq(0)
+    LocationPost.all.size.should == 0
   end
 
 end

@@ -1,2 +1,9 @@
 one:
-  name: User
+  id: 1
+  name: Tobias Funke
+  subtype: false
+
+two:
+  id: 2
+  name: Homer Simpson
+  subtype: false

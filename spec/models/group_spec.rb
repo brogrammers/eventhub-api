@@ -1,48 +1,34 @@
 require 'spec_helper'
 
 describe Group do
+  fixtures :core_users, :users, :groups, :destinations
 
-  before :all do
-    @groups = YAML.load_file File.join(File.dirname(__FILE__), '..', 'fixtures', 'groups.yml')
-  end
-
-  after :each do
-    Group.destroy_all
-    Destination.destroy_all
-    User.destroy_all
-    GroupMember.destroy_all
-    PendingMember.destroy_all
-  end
-
-  it 'should create a new valid group object' do
+  it 'should not create a valid new group record' do
     group = Group.new
-    group.name = @groups['one']['name']
-    group.description = @groups['one']['description']
-    group.name.should eq(@groups['one']['name'])
-    group.description.should eq(@groups['one']['description'])
-    expect(group.save!).to be_true
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it 'should attach a new destination' do
-    destination = Destination.new
-    group = Group.new
+  it 'should add a new destination to a group' do
+    destination = destinations :one
+    group = groups :one
     group.destinations << destination
-    group.destinations.size.should eq(1)
+    group.save!
+    group.destinations.size.should == 1
   end
 
-  it 'should delete all destinations if group is deleted' do
-    group = Group.new
-    destination = Destination.new
+  it 'should delete all destinations once a group is deleted' do
+    group = groups :one
+    destination = destinations :one
     group.destinations << destination
     group.save!
     destination.save!
     group.destroy
-    Destination.all.size.should eq(0)
+    expect { Destination.find destination.id }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it 'should be possible to add user to invited' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+    user = users :one
+    group = groups :one
     group.invited << user
     group.save!
     user.save!
@@ -51,8 +37,8 @@ describe Group do
   end
 
   it 'should be possible to remove user from invited' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+    user = users :one
+    group = groups :one
     group.invited << user
     group.save!
     user.save!
@@ -62,9 +48,9 @@ describe Group do
     user.groups_invited_to.should_not include(group)
   end
 
-  it 'invites should be removed when the group is removed' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+  it 'invites should be removed once the group is removed' do
+    user = users :one
+    group = groups :one
     group.invited << user
     user.save!
     group.save!
@@ -72,9 +58,9 @@ describe Group do
     PendingMember.all.size.should eq(0)
   end
 
-  it 'should be possible to add user to members' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+  it 'should be possible to add a user to members' do
+    user = users :one
+    group = groups :one
     group.members << user
     user.save!
     group.save!
@@ -82,9 +68,9 @@ describe Group do
     user.groups_member_of.should include(group)
   end
 
-  it 'should be possbile to remove user from mebers' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+  it 'should be possible to remove the user from members' do
+    user = users :one
+    group = groups :one
     group.members << user
     user.save!
     group.save!
@@ -94,29 +80,29 @@ describe Group do
     user.groups_member_of.should_not include(group)
   end
 
-  it 'memberships should be removed when the group is removed' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+  it 'memberships should be removed once the group is removed' do
+    user = users :one
+    group = groups :one
     group.members << user
     user.save!
     group.save!
     group.destroy
-    GroupMember.all.size.should eq(0)
+    GroupMember.all.size.should == 0
   end
 
   it 'should be possible to assign user as a creator of a group' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+    user = users :one
+    group = groups :one
     group.creator = user
     user.save!
     group.save!
-    group.creator.should eq(user)
+    group.creator.should == user
     user.groups_created.should include(group)
   end
 
   it 'should be possible to remove user from the creator of the group' do
-    user = User.new :name => 'Max', :availability => true, :registered => true, :registered_at => Time.now
-    group = Group.new
+    user = users :one
+    group = groups :one
     group.creator = user
     user.save!
     group.save!

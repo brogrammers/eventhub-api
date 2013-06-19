@@ -1,7 +1,11 @@
 one:
-  name: User
+  core_user_id: 1
   availability: true
   registered: true
-  location:
-    latitude: 155.123456789
-    longitude: 6.23456323456
+  registered_at: <%= Time.now %>
+
+two:
+  core_user_id: 2
+  availability: true
+  registered: true
+  registered_at: <%= Time.now %>
