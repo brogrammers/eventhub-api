@@ -16,6 +16,16 @@ describe Group do
     group.destinations.size.should == 1
   end
 
+  it 'should remove destination from a group' do
+    destination = destinations :one
+    group = groups :one
+    group.destinations << destination
+    group.save!
+    group.destinations.delete destination
+    group.save!
+    group.destinations.size.should == 0
+  end
+
   it 'should delete all destinations once a group is deleted' do
     group = groups :one
     destination = destinations :one
@@ -99,18 +109,53 @@ describe Group do
     group.creator.should == user
     user.groups_created.should include(group)
   end
-
-  it 'should be possible to remove user from the creator of the group' do
-    user = users :one
+  it 'should not be possible to create a group with a name containing less than 5 charactes' do
     group = groups :one
-    group.creator = user
-    user.save!
-    group.save!
-    group.creator = nil
-    group.save!
-    group.creator.should_not eq(user)
-    user.groups_created.should_not include(group)
+    group.name = 'a'
+    expect{ group.save!}.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it 'should not be possible to create a group with a name containing more than 256 characters' do
+    group = groups :one
+    group.name = Array.new(257){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
+    expect{ group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a group with a description contaning less than 5 characters' do
+    group = groups :one
+    group.description = 'ab'
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a group with description containing more than 1024 characters' do
+    group = groups :one
+    group.description = Array.new(1025){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a group without a creator' do
+    group = groups :one
+    group.creator = nil
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a group with same user as a creator and member' do
+    group = groups :one
+    group.members << group.creator
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a group with same user as a creator and invied' do
+    group = groups :one
+    group.invited << group.creator
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a group with same user as invited an member' do
+    group = groups :one
+    group.invited << (users :three)
+    group.members << (users :three)
+    expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
 end
 

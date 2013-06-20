@@ -45,6 +45,7 @@ describe User do
       user.groups_member_of.delete group
       user.save!
       user.groups_member_of.should_not include(group)
+      group.reload
       group.members.should_not include(user)
     end
 
@@ -94,6 +95,8 @@ describe User do
     group1.save!
     group2.save!
     user.destroy
+    group1.reload
+    group2.reload
     GroupMember.all.size.should == 0
     group1.members.size.should == 0
     group2.members.size.should == 0
@@ -122,6 +125,7 @@ describe User do
     user.groups_invited_to.delete group
     user.save!
     user.groups_invited_to.should_not include(group)
+    group.reload
     group.invited.should_not include(user)
   end
 
@@ -135,6 +139,8 @@ describe User do
     group1.save!
     group2.save!
     user.destroy
+    group1.reload
+    group2.reload
     PendingMember.all.size.should == 0
     group1.invited.size.should == 0
     group2.invited.size.should == 0
@@ -209,5 +215,4 @@ describe User do
     user.destroy
     LocationPost.all.size.should == 0
   end
-
 end
