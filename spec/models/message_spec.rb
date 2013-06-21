@@ -23,13 +23,25 @@ describe Message do
     message.user.should == user
   end
 
-  it 'should not be possible to create a message with empty message' do
+  it 'should not be possible to create a message with empty string' do
     message = Message.new
     message.content = ''
     chatroom = chatrooms :two
     message.chatroom = chatroom
     user = users :one
     message.user = user
+    chatroom.save!
+    expect{ message.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should not be possible to create a message with string containing more than 10000 characters' do
+    message = Message.new
+    message.content = Array.new(10001){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
+    chatroom = chatrooms :two
+    message.chatroom = chatroom
+    user = users :one
+    message.user = user
+    chatroom.group.creator = user
     chatroom.save!
     expect{ message.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
@@ -44,5 +56,4 @@ describe Message do
     chatroom.save!
     expect{ message.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
-
 end
