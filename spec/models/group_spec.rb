@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Group do
-  fixtures :core_users, :users, :groups, :destinations
+  fixtures :core_users, :users, :groups, :destinations, :chatrooms
 
   it 'should not create a valid new group record' do
     group = Group.new
@@ -156,6 +156,26 @@ describe Group do
     group.invited << (users :three)
     group.members << (users :three)
     expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
+  it 'should be possible to add a chatroom to a group' do
+    group = groups :one
+    chatroom = chatrooms :one
+    group.chatroom = chatroom
+    group.save!
+    chatroom.save!
+    group.chatroom.should == chatroom
+    chatroom.group.should == group
+  end
+
+  it 'should destroy chatroom when the group is destroyed' do
+    group = groups :one
+    chatroom = chatrooms :one
+    group.chatroom = chatroom
+    group.save!
+    chatroom.save!
+    group.destroy
+    expect{ Chatroom.find chatroom.id }.to raise_error(ActiveRecord::RecordNotFound)
   end
 end
 
