@@ -24,7 +24,7 @@ class Group < ActiveRecord::Base
 
   has_one :chatroom, :dependent => :destroy
 
-  validates :description, :name, :creator, :presence => true
+  validates :description, :name, :creator, :chatroom,  :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
   validates_with MembersCreatorInvitedValdiator
