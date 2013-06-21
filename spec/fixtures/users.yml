@@ -9,3 +9,16 @@ two:
   availability: true
   registered: true
   registered_at: <%= Time.now %>
+
+three:
+  core_user_id: 3
+  availability: true
+  registered: true
+  registered_at: <%= Time.now %>
+
+four:
+  core_user_id: 4
+  availability: true
+  registered: true
+  registered_at: <%= Time.now %>
+
