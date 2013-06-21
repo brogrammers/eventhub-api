@@ -22,7 +22,9 @@ class Group < ActiveRecord::Base
   has_many :pending_members, :dependent => :destroy
   has_many :invited, :through => :pending_members, :source => :user
 
-  validates :description, :name, :creator, :presence => true
+  has_one :chatroom, :dependent => :destroy
+
+  validates :description, :name, :creator, :chatroom,  :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
   validates_with MembersCreatorInvitedValdiator

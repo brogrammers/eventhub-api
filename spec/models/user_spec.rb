@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe User do
-  fixtures :users, :core_users, :groups, :location_posts, :locations
+  fixtures :users, :core_users, :groups, :location_posts, :locations, :chatrooms
 
   it 'should not create a new invalid user record' do
     user = User.new
