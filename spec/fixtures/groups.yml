@@ -1,7 +1,9 @@
 one:
   name: group
-  description: desc
+  description: descr
+  user_id: 2
 
 two:
   name: group2
-  description: desc2
+  description: descr2
+  user_id: 2
