@@ -7,4 +7,6 @@ class Event < ActiveRecord::Base
 
   has_many :comments, :as => :commentable, :dependent => :destroy
   has_many :offers ,:as => :offerer, :dependent => :destroy
+
+  belongs_to :place
 end
