@@ -4,3 +4,10 @@ one:
   description: desc1
   city: Dublin
   country: Ireland
+
+two:
+  id: 2
+  name: place2
+  description: desc2
+  city: Dublin
+  country: Ireland

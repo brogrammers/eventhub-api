@@ -1,5 +1,13 @@
 one:
   name: event1
   description: desc1
-  start_time: <%= Time.now %>
-  end_time: <%= Time.now %>
+  start_time: <%= Time.now + 1%>
+  end_time: <%= Time.now + 60 %>
+  place_id: 1
+
+two:
+  name: event2
+  description: desc2
+  start_time: <%= Time.now + 1 %>
+  end_time: <%= Time.now + 60 %>
+  place_id: 2
