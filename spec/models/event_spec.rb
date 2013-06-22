@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Event do
-  fixtures :events, :comments, :offers, :places
+  fixtures :events, :comments, :offers, :places, :destinations
 
   context 'Comments' do
 
@@ -69,51 +69,95 @@ describe Event do
 
   end
 
-  context 'Validations' do
-    it 'should not be possible to create event without description' do
+  context 'Destinations' do
+    it 'should be possible to add destination to event' do
+      event = events :one
+      dest = destinations :one
+      event.destinations << dest
+      dest.save!
+      event.save!
+      event.destinations.should include(dest)
+      dest.choice.should == event
+    end
 
+    it 'when event is destroyed it should destroy all destinations which have this place as their choice' do
+      event = events :one
+      dest = destinations :one
+      event.destinations << dest
+      dest.save!
+      event.save!
+      event.destroy
+      expect{ Destination.find dest.id }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  context 'Validations' do
+
+    it 'should not be possible to create event without description' do
+      event = events :one
+      event.description = nil
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event without name' do
-
+      event = events :one
+      event.name = nil
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event without start time' do
-
+      event = events :one
+      event.start_time = nil
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event without end time' do
-
+      event = events :one
+      event.end_time = nil
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event without place' do
-
+      event = events :one
+      event.place = nil
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event name containing less than 5 characters' do
-
+      event = events :one
+      event.name = 'abcd'
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event name containing more than 256 characters' do
-
+      event = events :one
+      event.name = Array.new(257){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event descripion containing less than 5 characters' do
-
+      event = events :one
+      event.description = 'abcd'
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event description containing more than 1024 charcters' do
-
+      event = events :one
+      event.description = Array.new(1025){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event which starts in the past' do
-
+      event = events :one
+      event.start_time = Time.now - 1
+      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to crate event which ends before it starts' do
-
+      event = events :one
+      event.end_time = event.start_time - 1
+      expect{ event.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
-
 
   end
 
