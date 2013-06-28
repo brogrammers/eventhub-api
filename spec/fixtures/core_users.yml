@@ -1,9 +1,14 @@
 one:
   id: 1
   name: Tobias Funke
-  subtype: false
+  subtype: User
 
 two:
   id: 2
   name: Homer Simpson
-  subtype: false
+  subtype: User
+
+business:
+  id: 3
+  name: Robert Lis
+  subtype: BusinessUser
