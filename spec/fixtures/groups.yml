@@ -1,7 +1,18 @@
 one:
+  id: 1
   name: group
-  description: desc
+  description: descr
+  user_id: 2
 
 two:
+  id: 2
   name: group2
-  description: desc2
+  description: descr2
+  user_id: 2
+
+three:
+  id: 3
+  name: group3
+  description: descr2
+  user_id: 2
+

@@ -8,7 +8,17 @@ two:
   name: Homer Simpson
   subtype: User
 
-business:
+three:
   id: 3
+  name: Max Hoffman
+  subtype: User
+
+four:
+  id: 4
   name: Robert Lis
+  subtype: User
+
+five:
+  id: 5
+  name: Alchemy
   subtype: BusinessUser

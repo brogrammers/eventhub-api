@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe User do
-  fixtures :users, :core_users, :groups, :location_posts, :locations
+  fixtures :users, :core_users, :groups, :location_posts, :locations, :chatrooms
 
   it 'should not create a new invalid user record' do
     user = User.new
@@ -45,7 +45,7 @@ describe User do
       user.groups_member_of.delete group
       user.save!
       user.groups_member_of.should_not include(group)
-      group.members.should_not include(user)
+      group.members(true).should_not include(user)
     end
 
   end
@@ -95,8 +95,8 @@ describe User do
     group2.save!
     user.destroy
     GroupMember.all.size.should == 0
-    group1.members.size.should == 0
-    group2.members.size.should == 0
+    group1.members(true).size.should == 0
+    group2.members(true).size.should == 0
   end
 
   context 'USER -> GROUP INVITATIONS' do
@@ -122,7 +122,7 @@ describe User do
     user.groups_invited_to.delete group
     user.save!
     user.groups_invited_to.should_not include(group)
-    group.invited.should_not include(user)
+    group.invited(true).should_not include(user)
   end
 
   it 'should remove all invitations once the user is destroyed' do
@@ -136,8 +136,8 @@ describe User do
     group2.save!
     user.destroy
     PendingMember.all.size.should == 0
-    group1.invited.size.should == 0
-    group2.invited.size.should == 0
+    group1.invited(true).size.should == 0
+    group2.invited(true).size.should == 0
   end
 
   context 'USER - GROUP POSSESSION' do
@@ -209,5 +209,4 @@ describe User do
     user.destroy
     LocationPost.all.size.should == 0
   end
-
 end
