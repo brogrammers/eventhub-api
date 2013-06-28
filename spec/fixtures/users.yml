@@ -22,3 +22,7 @@ four:
   registered: true
   registered_at: <%= Time.now %>
 
+five:
+  core_user_id: 5
+  availability: false
+  registered: true
