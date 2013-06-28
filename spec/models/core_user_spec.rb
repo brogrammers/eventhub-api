@@ -98,6 +98,11 @@ describe CoreUser do
 
   context 'identities' do
 
+    it 'should have at least one identity' do
+      user = users :two
+      expect { user.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     it 'should add an identity to the user record' do
       user = users :one
       identity = identities :one

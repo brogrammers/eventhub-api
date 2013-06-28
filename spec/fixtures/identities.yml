@@ -1,3 +1,11 @@
 one:
   provider_id: 1
   token: 1234567890
+  identifiable_id: 1
+  identifiable_type: CoreUser
+
+two:
+  provider_id: 2
+  token: 1234567890
+  identifiable_id: 5
+  identifiable_type: CoreUser
