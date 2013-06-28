@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Group do
-  fixtures :core_users, :users, :groups, :destinations, :chatrooms
+  fixtures :core_users, :users, :groups, :destinations, :chatrooms, :identities
 
   it 'should not create a valid new group record' do
     group = Group.new
