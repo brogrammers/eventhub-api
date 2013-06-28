@@ -15,4 +15,6 @@ class CoreUser < ActiveRecord::Base
   validates_with IdentityValidator
 
   validates :name, :presence => true
+
+  has_many :places
 end
