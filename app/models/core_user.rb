@@ -3,6 +3,7 @@ class CoreUser < ActiveRecord::Base
   attr_accessible :name
 
   has_many :devices, :as => :device_compatible, :dependent => :destroy
+  has_many :notifications, :as => :notifiable, :dependent => :destroy
 
   validates :name, :presence => true
 end

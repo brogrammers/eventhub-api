@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CoreUser do
-  fixtures :core_users, :users, :business_users, :devices
+  fixtures :core_users, :users, :business_users, :devices, :notifications
 
   it 'should not create a valid new core user record' do
     user = CoreUser.new
@@ -46,6 +46,46 @@ describe CoreUser do
     device.save!.should be_true
     user.destroy
     expect { Device.find device.id }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  it 'should add a notification to the user record' do
+    user = users :one
+    notification = notifications :one
+    user.notifications << notification
+    user.save!.should be_true
+    notification.save!.should be_true
+    notification.user(true).should be_a(User)
+    user.notifications(true).should include(notification)
+  end
+
+  it 'should add a notification to the business user record' do
+    user = business_users :one
+    notification = notifications :one
+    user.notifications << notification
+    user.save!.should be_true
+    notification.save!.should be_true
+    notification.user(true).should be_a(BusinessUser)
+    user.notifications(true).should include(notification)
+  end
+
+  it 'should destroy all notifications once the user is destroyed' do
+    user = users :one
+    notification = notifications :one
+    user.notifications << notification
+    user.save!.should be_true
+    notification.save!.should be_true
+    user.destroy
+    expect { Notification.find notification.id }.to raise_error(ActiveRecord::RecordNotFound)
+  end
+
+  it 'should destroy all notifications once the business user is destroyed' do
+    user = business_users :one
+    notification = notifications :one
+    user.notifications << notification
+    user.save!.should be_true
+    notification.save!.should be_true
+    user.destroy
+    expect { Notification.find notification.id }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
 end
