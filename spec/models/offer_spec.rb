@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Offer do
-  fixtures :offers, :places, :events
+  fixtures :offers, :places, :events, :locations
 
   it 'should be possible to create an offer with a place' do
     offer = offers :one
