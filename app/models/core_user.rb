@@ -4,5 +4,6 @@ class CoreUser < ActiveRecord::Base
 
   validates :name, :presence => true
 
-  has_many :places
+  has_many :places, :as => :creator, :dependent => :destroy
+
 end

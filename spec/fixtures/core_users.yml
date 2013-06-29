@@ -1,19 +1,19 @@
 one:
   id: 1
   name: Tobias Funke
-  subtype: false
+  subtype: User
 
 two:
   id: 2
   name: Homer Simpson
-  subtype: false
+  subtype: User
 
 three:
   id: 3
   name: Max Hoffman
-  subtype: false
+  subtype: User
 
 four:
   id: 4
   name: Robert Lis
-  subtype: false
+  subtype: User

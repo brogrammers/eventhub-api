@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe CoreUser do
-  fixtures :core_users
+  fixtures :core_users, :places
 
   it 'should not create a valid new core user record' do
     user = CoreUser.new

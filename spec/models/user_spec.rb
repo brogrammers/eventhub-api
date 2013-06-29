@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe User do
-  fixtures :users, :core_users, :groups, :location_posts, :locations, :chatrooms
+  fixtures :core_users, :users, :groups, :location_posts, :locations, :chatrooms, :places
 
   it 'should not create a new invalid user record' do
     user = User.new
@@ -209,4 +209,30 @@ describe User do
     user.destroy
     LocationPost.all.size.should == 0
   end
+
+  it 'should be possible to add place to a business user' do
+    user = BusinessUser.new
+    user.name = 'blah'
+    place = places :one
+    user.places << place
+    user.save!
+    place.save!
+    user.places(true).should include(place)
+    place.creator(true).should == user
+  end
+
+  it 'should be possible to add place to user' do
+    user = users :one
+    place = places :one
+    user.places << place
+    user.save!
+    place.save!
+    user.places(true).should include(place)
+    place.creator(true).should == user
+  end
+
+  it 'should remove all places of the user when the user is destroyed' do
+
+  end
+
 end
