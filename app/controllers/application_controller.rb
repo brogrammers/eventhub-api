@@ -1,3 +1,5 @@
+require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'eventhub_api')
+
 class ApplicationController < ActionController::Base
   before_filter :find_current_user
 
