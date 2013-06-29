@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Place do
-  fixtures :places, :comments, :offers, :events, :locations
+  fixtures :core_users, :users, :places, :comments, :offers, :events, :locations
 
   context 'Comment ' do
 
