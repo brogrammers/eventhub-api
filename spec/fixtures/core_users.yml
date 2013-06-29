@@ -17,3 +17,8 @@ four:
   id: 4
   name: Robert Lis
   subtype: User
+
+five:
+  id: 5
+  name: Alchemy
+  subtype: BusinessUser

@@ -1,4 +1,4 @@
-class MembersCreatorInvitedValdiator < ActiveModel::Validator
+class MembersCreatorInvitedValidator < ActiveModel::Validator
   def validate(record)
     all_users = record.members + record.invited << record.creator
     unless all_users.length == all_users.uniq.length
@@ -27,5 +27,5 @@ class Group < ActiveRecord::Base
   validates :description, :name, :creator, :chatroom,  :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
-  validates_with MembersCreatorInvitedValdiator
+  validates_with MembersCreatorInvitedValidator
 end
