@@ -186,12 +186,14 @@ describe Group do
       group = groups :one
       group.members << group.creator
       expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.errors.full_messages.first.should == "User #{I18n.translate!('activerecord.errors.models.group.attributes.user.single_user')}"
     end
 
     it 'should not be possible to create a group with same user as a creator and invied' do
       group = groups :one
       group.invited << group.creator
       expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.errors.full_messages.first.should == "User #{I18n.translate!('activerecord.errors.models.group.attributes.user.single_user')}"
     end
 
     it 'should not be possible to create a group with same user as invited an member' do
@@ -199,6 +201,7 @@ describe Group do
       group.invited << (users :three)
       group.members << (users :three)
       expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      group.errors.full_messages.first.should == "User #{I18n.translate!('activerecord.errors.models.group.attributes.user.single_user')}"
     end
 
     it 'should not be possible to save a group without a chatroom' do

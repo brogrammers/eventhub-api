@@ -10,3 +10,21 @@ en:
             longitude:
               less_than: *invalid
               greater_than: *invalid
+        event:
+          attributes:
+            start_time:
+              in_future: 'must be in the future'
+            end_time:
+              after_start_time: 'must be after start_time'
+        group:
+          attributes:
+            user:
+              single_user: 'can only belong to creator or members or invited'
+        core_user:
+          attributes:
+            user:
+              one_identity: 'needs at least one identity'
+        message:
+          attributes:
+            user:
+              not_member: 'does not belong to members or creator of the groups chatroom'
