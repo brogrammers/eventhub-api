@@ -37,6 +37,7 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'debugger'
 
+# Added gems
 gem 'rabl'
 gem 'multiple_table_inheritance'
 gem 'rspec'
@@ -44,3 +45,4 @@ gem 'rspec-rails'
 gem 'doorkeeper', '~> 0.6.7', :git => 'git@github.com:tsov/doorkeeper.git'
 gem 'koala'
 gem 'strong_parameters'
+gem 'geocoder'
