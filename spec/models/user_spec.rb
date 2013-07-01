@@ -14,7 +14,7 @@ describe User do
   end
 
   it 'should add a valid location to a user record' do
-    user = users(:one)
+    user = users(:two)
     user.location = locations :one
     user.save!
     user.location.should == locations(:one)

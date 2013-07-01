@@ -105,18 +105,6 @@ describe Place do
 
   context 'Validations' do
 
-    it 'should not be possible to create a place without city' do
-      place = places :one
-      place.city = nil
-      expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
-    it 'should not be possible to create an place without country' do
-      place = places :one
-      place.country = nil
-      expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
     it 'should not be possible to ceate a place with description' do
       place = places :one
       place.description = nil

@@ -6,7 +6,7 @@ class CoreUser < ActiveRecord::Base
   has_many :notifications, :as => :notifiable, :dependent => :destroy
   has_many :identities, :as => :identifiable, :dependent => :destroy
 
-  validates_with EventhubApi::Validator::Identity
+  validates_with EventhubApi::Validator::CoreUser
 
   validates :name, :presence => true
 

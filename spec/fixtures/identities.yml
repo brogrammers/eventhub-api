@@ -9,3 +9,9 @@ two:
   token: 1234567890
   identifiable_id: 5
   identifiable_type: CoreUser
+
+three:
+  provider_id: 3
+  token: 1234567890
+  identifiable_id: 2
+  identifiable_type: CoreUser
