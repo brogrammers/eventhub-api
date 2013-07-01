@@ -99,7 +99,7 @@ describe CoreUser do
   context 'identities' do
 
     it 'should have at least one identity' do
-      user = users :two
+      user = users :three
       expect { user.save! }.to raise_error(ActiveRecord::RecordInvalid)
       user.errors.full_messages.first.should == "User #{I18n.translate!('activerecord.errors.models.core_user.attributes.user.one_identity')}"
     end

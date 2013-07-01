@@ -2,6 +2,8 @@ one:
   id: 1
   latitude: 53.344103999999990000
   longitude: -6.267493699999932000
+  city: Dublin
+  country: Ireland
 
 two:
   id: 2
