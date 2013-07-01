@@ -3,8 +3,8 @@ class Location < ActiveRecord::Base
 
   belongs_to :locationable, :polymorphic => true
 
-  validates :latitude , numericality: { greater_than:  -90, less_than:  90 }
-  validates :longitude, numericality: { greater_than: -180, less_than: 180 }
+  validates :latitude , numericality: { greater_than:  -90, less_than:  90 }, allow_nil: false, allow_blank: false, presence: true
+  validates :longitude, numericality: { greater_than: -180, less_than: 180 }, allow_nil: false, allow_blank: false, presence: true
 
   before_validation :find_location, :unless => lambda { self.city and self.country }
 
