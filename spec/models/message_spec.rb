@@ -55,5 +55,6 @@ describe Message do
     message.user = user
     chatroom.save!
     expect{ message.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    message.errors.full_messages.first.should == "User #{I18n.translate!('activerecord.errors.models.message.attributes.user.not_member')}"
   end
 end
