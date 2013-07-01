@@ -1,2 +1,4 @@
 one:
-  content: Post
+  id: 1
+  content: Location Post
+  user_id: 1

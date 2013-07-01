@@ -179,7 +179,7 @@ describe User do
 
   it 'should be possible to add location post to user' do
     user = users :one
-    post = LocationPost.new
+    post = location_posts :one
     user.location_posts << post
     user.save!
     post.save!
