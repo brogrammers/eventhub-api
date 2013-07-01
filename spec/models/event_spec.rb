@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Event do
-  fixtures :events, :comments, :offers, :places, :destinations
+  fixtures :events, :comments, :offers, :places, :destinations, :users, :core_users
 
   context 'Comments' do
 
@@ -9,6 +9,7 @@ describe Event do
       event = events :one
       comment = comments :one
       event.comments << comment
+      comment.user = users :one
       comment.save!
       event.save!
       event.comments.size.should == 1
@@ -18,6 +19,7 @@ describe Event do
       event = events :one
       comment = comments :one
       event.comments << comment
+      comment.user = users :one
       comment.save!
       event.save!
       event.destroy

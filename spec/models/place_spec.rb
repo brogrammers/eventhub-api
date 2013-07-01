@@ -8,6 +8,7 @@ describe Place do
     it 'should possible to comment on a place' do
       place = places :one
       comment = comments :one
+      comment.user = users :one
       place.comments << comment
       comment.save!
       place.save!
@@ -17,6 +18,7 @@ describe Place do
     it 'should destroy all comments on that place once the place is destroyed' do
       place = places :one
       comment = comments :one
+      comment.user = users :one
       place.comments << comment
       comment.save!
       place.save!
