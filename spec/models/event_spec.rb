@@ -161,6 +161,12 @@ describe Event do
       event.errors.full_messages.first.should == "End time #{I18n.translate!('activerecord.errors.models.event.attributes.end_time.after_start_time')}"
     end
 
+    it 'should not be possible to create event with type other than private / public / certified' do
+      event = events :one
+      event.visibility_type = 'abc'
+      expect{ event.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
   end
 
 end

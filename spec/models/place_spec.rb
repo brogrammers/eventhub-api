@@ -147,6 +147,12 @@ describe Place do
       expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
+    it 'should not be possible to create a place with type other than private / public / certified' do
+      place = places :one
+      place.visibility_type = 'abc'
+      expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
   end
 
 end
