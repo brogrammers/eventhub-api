@@ -96,7 +96,7 @@ describe Event do
     it 'should not be possible to create event without description' do
       event = events :one
       event.description = nil
-      expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
+      expect{ event.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'should not be possible to create event without name' do
@@ -135,13 +135,13 @@ describe Event do
       expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'should not be possible to create event descripion containing less than 5 characters' do
+    it 'should not be possible to create event description containing less than 5 characters' do
       event = events :one
       event.description = 'abcd'
       expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'should not be possible to create event description containing more than 1024 charcters' do
+    it 'should not be possible to create event description containing more than 1024 characters' do
       event = events :one
       event.description = Array.new(1025){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
       expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
@@ -151,12 +151,14 @@ describe Event do
       event = events :one
       event.start_time = Time.now - 1
       expect{ event.save!}.to raise_error(ActiveRecord::RecordInvalid)
+      event.errors.full_messages.first.should == "Start time #{I18n.translate!('activerecord.errors.models.event.attributes.start_time.in_future')}"
     end
 
     it 'should not be possible to crate event which ends before it starts' do
       event = events :one
       event.end_time = event.start_time - 1
       expect{ event.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      event.errors.full_messages.first.should == "End time #{I18n.translate!('activerecord.errors.models.event.attributes.end_time.after_start_time')}"
     end
 
   end

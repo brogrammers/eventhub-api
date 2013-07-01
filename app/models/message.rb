@@ -5,5 +5,5 @@ class Message < ActiveRecord::Base
 
   validates :user, :chatroom, :content, :presence => true
   validates :content, :length => { :minimum => 1, :maximum => 10000 }
-  validates_with EventhubApi::Validator::Message
+  validates_with EventhubApi::Validator::Message, :if => lambda { self.chatroom and self.chatroom.group }
 end

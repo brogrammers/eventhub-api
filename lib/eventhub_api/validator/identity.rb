@@ -2,7 +2,7 @@ module EventhubApi
   module Validator
     class Identity < ActiveModel::Validator
       def validate(record)
-        record.errors[:identities] << 'Needs at least one identity' if record.identities.size < 1
+        record.errors[:user] << I18n.translate!('activerecord.errors.models.core_user.attributes.user.one_identity') if record.identities.size < 1
       end
     end
   end
