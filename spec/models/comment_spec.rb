@@ -13,7 +13,8 @@ describe Comment do
     comment.commentable.should_not be_nil
   end
 
-  context 'Validations' do
+  context 'validations' do
+
     it 'should not be possible to create place without commenable set' do
       comment = comments :one
       comment.commentable = nil
@@ -61,5 +62,7 @@ describe Comment do
       comment.rating = -1
       expect{comment.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
+
   end
+
 end
