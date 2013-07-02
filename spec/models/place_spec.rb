@@ -8,6 +8,7 @@ describe Place do
     it 'should possible to comment on a place' do
       place = places :one
       comment = comments :one
+      comment.user = users :one
       place.comments << comment
       comment.save!
       place.save!
@@ -17,6 +18,7 @@ describe Place do
     it 'should destroy all comments on that place once the place is destroyed' do
       place = places :one
       comment = comments :one
+      comment.user = users :one
       place.comments << comment
       comment.save!
       place.save!
@@ -144,6 +146,12 @@ describe Place do
     it 'should not be possible to create a place with description with more than 1024 characters' do
       place = places :one
       place.description = Array.new(1025){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
+      expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'should not be possible to create a place with type other than private / public / certified' do
+      place = places :one
+      place.visibility_type = 'abc'
       expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 

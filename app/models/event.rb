@@ -12,4 +12,9 @@ class Event < ActiveRecord::Base
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
   validates_with EventhubApi::Validator::Event
+
+  def visibility_type
+    self.parent.visibility_type
+  end
+
 end
