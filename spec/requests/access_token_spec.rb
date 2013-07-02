@@ -51,6 +51,27 @@ describe 'AccessToken' do
         end.to raise_error(AssertionHandler::AssertionTypeUnknownError)
       end
 
+      it 'should not create an access token if the client does not exist' do
+        params = { :client_id => 'invalid', :client_secret => 'invalid', :assertion_type => 'facebook', :assertion => 'invalid' }
+        expect do
+          post '/oauth/token', assertion_endpoint_url(params)
+        end.to raise_error(AssertionHandler::ClientUnknownError)
+      end
+
+      it 'should not create an access token if the assertion type is missing' do
+        params = { :client_id => 'invalid', :client_secret => 'invalid', :assertion => 'invalid' }
+        expect do
+          post '/oauth/token', assertion_endpoint_url(params)
+        end.to raise_error(AssertionHandler::MissingAssertionTypeError)
+      end
+
+      it 'should not create an access token if the assertion is missing' do
+        params = { :client => @application, :assertion_type => 'facebook' }
+        expect do
+          post '/oauth/token', assertion_endpoint_url(params)
+        end.to raise_error(AssertionHandler::MissingAssertionError)
+      end
+
     end
 
   end
