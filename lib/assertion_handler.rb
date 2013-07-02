@@ -1,17 +1,22 @@
 class AssertionHandler
   class ClientUnknownError < StandardError; end
   class AssertionTypeUnknownError < StandardError; end
+  class MissingAssertionTypeError < StandardError; end
   class MissingAssertionError < StandardError; end
   class InvalidAssertionError < StandardError; end
 
   attr_accessor :identity
 
   def initialize(type, assertion, client, scope)
-    @type = type.to_sym
     @assertion = assertion
     @client = client
     @scope = scope
     @done = false
+    begin
+      @type = type.to_sym
+    rescue NoMethodError
+      raise MissingAssertionTypeError
+    end
     raise MissingAssertionError unless @assertion
     raise ClientUnknownError unless @client
   end
