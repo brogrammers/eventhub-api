@@ -2,10 +2,10 @@ one:
   id: 1
   name: place1
   description: desc1
-  visibility_type: private
+  visibility_type_cd: 1
 
 two:
   id: 2
   name: place2
   description: desc2
-  visibility_type: public
+  visibility_type_cd: 0
