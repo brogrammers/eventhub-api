@@ -154,6 +154,11 @@ describe Place do
       expect { place.visibility_type = :invalid }.to raise_error(ArgumentError)
     end
 
+    it 'should not be possible to create a place without any type' do
+      place = places :three
+      expect { place.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
   end
 
 end

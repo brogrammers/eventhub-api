@@ -14,4 +14,5 @@ class Place < ActiveRecord::Base
   validates :location, :description, :name, :visibility_type, :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
+  validates :visibility_type, :as_enum => true
 end
