@@ -5,7 +5,6 @@ one:
   start_time: <%= Time.now + 10 %>
   end_time: <%= Time.now + 60 %>
   place_id: 1
-  visibility_type: private
 
 
 two:
@@ -15,5 +14,4 @@ two:
   start_time: <%= Time.now + 10 %>
   end_time: <%= Time.now + 60 %>
   place_id: 2
-  visibility_type: private
 
