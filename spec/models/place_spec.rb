@@ -151,8 +151,12 @@ describe Place do
 
     it 'should not be possible to create a place with type other than private / public / certified' do
       place = places :one
-      place.visibility_type = 'abc'
-      expect{ place.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { place.visibility_type = :invalid }.to raise_error(ArgumentError)
+    end
+
+    it 'should not be possible to create a place without any type' do
+      place = places :three
+      expect { place.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
   end
