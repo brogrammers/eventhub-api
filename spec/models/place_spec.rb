@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Place do
   fixtures :core_users, :users, :places, :comments, :offers, :events, :locations
 
-  context 'Comment ' do
+  context 'comment' do
 
     it 'should possible to comment on a place' do
       place = places :one
@@ -28,7 +28,7 @@ describe Place do
 
   end
 
-  context 'Offers ' do
+  context 'offers' do
 
     it 'should be possbile to add an offer' do
       place = places :one
@@ -71,7 +71,7 @@ describe Place do
 
   end
 
-  context 'Events' do
+  context 'events' do
 
     it 'should be possible to add event to a place' do
       place = places :one
@@ -105,7 +105,7 @@ describe Place do
     end
   end
 
-  context 'Validations' do
+  context 'validations' do
 
     it 'should not be possible to ceate a place with description' do
       place = places :one
