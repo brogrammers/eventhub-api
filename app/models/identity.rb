@@ -7,4 +7,5 @@ class Identity < ActiveRecord::Base
   belongs_to :user, :foreign_key => 'identifiable_id', :class_name => 'CoreUser'
 
   validates :provider, :as_enum => true
+  validates :provider_id, :token, :presence => true
 end
