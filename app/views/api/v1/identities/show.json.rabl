@@ -1,3 +1,3 @@
 object @identity
 
-attributes :provider_id
+attributes :provider, :provider_id, :token
