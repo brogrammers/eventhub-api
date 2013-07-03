@@ -11,6 +11,10 @@ module EventhubApi
             record.errors[:voters] << 'must be a creator or member of group of this destination'
           end
         end
+
+        if record.voters.include? record.creator
+          record.errors[:creator] << 'of destination cannot vote for it'
+        end
       end
     end
   end

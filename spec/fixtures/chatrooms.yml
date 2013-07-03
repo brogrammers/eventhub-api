@@ -9,3 +9,7 @@ two:
 three:
   id: 2
   group_id: 2
+
+four:
+  id: 4
+  group_id: 4

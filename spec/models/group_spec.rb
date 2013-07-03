@@ -29,10 +29,9 @@ describe Group do
     end
 
     it 'should destroy all destinations once the group is destroyed' do
-      group = groups :one
+      group = groups :four
       destination = destinations :valid_destination
       group.destinations << destination
-      destination.group.creator = destination.creator
       group.save!
       destination.save!
       group.destroy

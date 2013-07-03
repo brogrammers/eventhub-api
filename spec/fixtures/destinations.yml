@@ -16,18 +16,18 @@ without_creator:
   id: 4
   choice_id: 1
   choice_type: Place
-  group_id: 1
+  group_id: 4
 
 without_choice:
   id: 5
   core_user_id: 1
-  group_id: 1
+  group_id: 4
 
 valid_destination:
   id: 6
   choice_id: 1
   choice_type: Place
-  group_id: 1
+  group_id: 4
   core_user_id: 1
 
 

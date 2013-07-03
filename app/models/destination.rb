@@ -7,5 +7,5 @@ class Destination < ActiveRecord::Base
   belongs_to :group
 
   validates :creator, :choice, :group, :presence => true
-  validates_with EventhubApi::Validator::Destination
+  validates_with EventhubApi::Validator::Destination, :if => lambda { self.group and self.group.creator }
 end
