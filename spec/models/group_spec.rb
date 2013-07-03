@@ -15,7 +15,7 @@ describe Group do
       group = groups :one
       group.destinations << destination
       group.save!
-      group.destinations.size.should == 1
+      group.destinations.should include(destination)
     end
 
     it 'should remove destination from a group' do
@@ -25,13 +25,14 @@ describe Group do
       group.save!
       group.destinations.delete destination
       group.save!
-      group.destinations.size.should == 0
+      group.destinations.should_not include(destination)
     end
 
     it 'should destroy all destinations once the group is destroyed' do
       group = groups :one
-      destination = destinations :one
+      destination = destinations :valid_destination
       group.destinations << destination
+      destination.group.creator = destination.creator
       group.save!
       destination.save!
       group.destroy

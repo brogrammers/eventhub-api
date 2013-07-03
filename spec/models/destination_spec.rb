@@ -4,55 +4,70 @@ describe Destination do
   fixtures :core_users, :users, :destinations, :groups, :events, :places, :chatrooms
 
   it 'should have a creator' do
-    dest = destinations :one
-    dest.creator = users :one
+    dest = destinations :without_creator
+    user = users :one
+    dest.creator = user
+    dest.group.creator = dest.creator
     dest.save!
+    user.save!
     dest.creator.should equal(users(:one))
   end
 
   it 'should have voters' do
-    dest = destinations :one
+    dest = destinations :valid_destination
     dest.voters << users(:one)
     dest.voters << users(:two)
+    dest.group.creator = dest.creator
+    dest.group.members << users(:one)
+    dest.group.members << users(:two)
     dest.save!
     dest.voters.size.should == 2
   end
 
   it 'should belong to a group' do
-    dest = destinations :one
+    dest = destinations :without_group
     group = groups :one
     dest.group = group
+    dest.group.creator = dest.creator
     group.save!
     dest.save!
     dest.group.should equal(group)
-    group.destinations.size.should == 1
+    group.destinations.should include(dest)
   end
 
   it 'should destroy votes when destination is destroyed' do
-    dest = destinations :one
+    dest = destinations :valid_destination
     dest.voters << users(:one)
     dest.voters << users(:two)
+    dest.group.creator = dest.creator
+    dest.group.members << users(:one)
+    dest.group.members << users(:two)
     dest.save!
+    vote_id_first = dest.votes[0].id
+    vote_id_second = dest.votes[1].id
     dest.destroy
-    Vote.all.size.should == 0
+    expect{Vote.find vote_id_first}.to raise_error(ActiveRecord::RecordNotFound)
+    expect{Vote.find vote_id_second}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it 'should add event to choice' do
-    dest = destinations :one
+    dest = destinations :without_choice
     event = events :one
     dest.choice = event
+    dest.group.creator = dest.creator
     dest.save!
     dest.choice.should equal(event)
     event.destinations.size.should == 1
   end
 
   it 'should add place to choice' do
-    dest = destinations :one
+    dest = destinations :without_choice
     place = places :one
     dest.choice = place
+    dest.group.creator = dest.creator
     dest.save!
     dest.choice.should equal(place)
-    place.destinations.size.should == 1
+    place.destinations.should include(dest)
   end
 
 end
