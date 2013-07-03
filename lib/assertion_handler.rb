@@ -70,7 +70,7 @@ class AssertionHandler
   end
 
   def register_user
-    identity_obj = Identity.new :provider_id => provider_response['id'], :token => @assertion
+    identity_obj = Identity.new :provider_id => provider_response['id'], :token => @assertion, :provider => @type
     identity_obj.save!
     @user = User.new :name => provider_response['name'], :availability => true, :registered => true, :registered_at => Time.now
     @user.identities << identity_obj
