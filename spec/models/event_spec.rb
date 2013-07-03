@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Event do
   fixtures :events, :comments, :offers, :places, :destinations, :users, :core_users
 
-  context 'Comments' do
+  context 'comments' do
 
     it 'should be possible to comment on an event' do
       event = events :one
@@ -28,7 +28,7 @@ describe Event do
 
   end
 
-  context 'Offers' do
+  context 'offers' do
 
     it 'should be possible to add an offer to an event' do
       event = events :one

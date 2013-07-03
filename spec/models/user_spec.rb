@@ -20,7 +20,7 @@ describe User do
     user.location.should == locations(:one)
   end
 
-  context 'USER -> GROUP MEMBERSHIP' do
+  context 'group membership' do
 
     it 'should be possible to add group (as membership) to the user' do
       user = users :one
@@ -32,20 +32,20 @@ describe User do
       group.members.should include(user)
     end
 
-  end
+    context 'tracking' do
 
-  context 'USER -> GROUP MEMBERSHIP -> TRACKING' do
+      it 'should be possible to remove group (as membership) from the user' do
+        user = users :one
+        group = groups :one
+        user.groups_member_of << group
+        group.save!
+        user.save!
+        user.groups_member_of.delete group
+        user.save!
+        user.groups_member_of.should_not include(group)
+        group.members(true).should_not include(user)
+      end
 
-    it 'should be possible to remove group (as membership) from the user' do
-      user = users :one
-      group = groups :one
-      user.groups_member_of << group
-      group.save!
-      user.save!
-      user.groups_member_of.delete group
-      user.save!
-      user.groups_member_of.should_not include(group)
-      group.members(true).should_not include(user)
     end
 
   end
@@ -99,7 +99,7 @@ describe User do
     group2.members(true).size.should == 0
   end
 
-  context 'USER -> GROUP INVITATIONS' do
+  context 'group invitations' do
 
     it 'should be possible to add invitation to user' do
       user = users :one
@@ -140,7 +140,7 @@ describe User do
     group2.invited(true).size.should == 0
   end
 
-  context 'USER - GROUP POSSESSION' do
+  context 'group possession' do
 
     it 'should be possible to add group to the user' do
       user = users :one
@@ -164,7 +164,7 @@ describe User do
     user.save!
     group1.save!
     user.groups_created.should_not include(group1)
-    #TODO: FIX!! -> group1.creator.should_not eq(user)
+    expect { Group.find(group1.id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it 'should remove all groups of that user if the user is destroyed' do
@@ -197,7 +197,7 @@ describe User do
     user.save!
     post.save!
     user.location_posts.should_not include(post)
-    #TODO: fix -> post.user.should_not eq(user)
+    expect { LocationPost.find(post.id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it 'should destroy all location posts once the user is destroyed' do
@@ -230,7 +230,16 @@ describe User do
     place.creator(true).should == user
   end
 
-  it 'should remove all places of the user when the user is destroyed' do
-
+  it 'should remove all places of the user once the user is destroyed' do
+    user = users :one
+    place1, place2 = places(:one), places(:two)
+    user.places << place1
+    user.places << place2
+    user.save!
+    user.destroy
+    expect do
+      Place.find(place1.id)
+      Place.find(place2.id)
+    end.to raise_error(ActiveRecord::RecordNotFound)
   end
 end

@@ -2,7 +2,6 @@ class Event < ActiveRecord::Base
   attr_accessible :description, :end_time, :start_time, :name, :description
 
   has_many :destinations, :as => :choice, :dependent => :destroy
-
   has_many :comments, :as => :commentable, :dependent => :destroy
   has_many :offers ,:as => :offerer, :dependent => :destroy
 

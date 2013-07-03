@@ -8,7 +8,7 @@ describe Group do
     expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  context 'Destinations' do
+  context 'destinations' do
 
     it 'should add a new destination to a group' do
       destination = destinations :one
@@ -40,7 +40,7 @@ describe Group do
 
   end
 
-  context 'Invited' do
+  context 'invited' do
 
     it 'should be possible to add user to invited' do
       user = users :one
@@ -76,7 +76,7 @@ describe Group do
 
   end
 
-  context 'Members' do
+  context 'members' do
 
     it 'should be possible to add a user to members' do
       user = users :one
@@ -112,7 +112,7 @@ describe Group do
 
   end
 
-  context 'Chatroom' do
+  context 'chatroom' do
 
     it 'should be possible to add a chatroom to a group' do
       group = groups :one
@@ -136,7 +136,7 @@ describe Group do
 
   end
 
-  context 'Creator' do
+  context 'creator' do
 
     it 'should be possible to assign user as a creator of a group' do
       user = users :one
@@ -150,7 +150,7 @@ describe Group do
 
   end
 
-  context 'Validations on save' do
+  context 'validations on save' do
 
     it 'should not be possible to create a group with a name containing less than 5 charactes' do
       group = groups :one

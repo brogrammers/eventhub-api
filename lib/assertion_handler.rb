@@ -1,17 +1,22 @@
 class AssertionHandler
   class ClientUnknownError < StandardError; end
   class AssertionTypeUnknownError < StandardError; end
+  class MissingAssertionTypeError < StandardError; end
   class MissingAssertionError < StandardError; end
   class InvalidAssertionError < StandardError; end
 
   attr_accessor :identity
 
   def initialize(type, assertion, client, scope)
-    @type = type.to_sym
     @assertion = assertion
     @client = client
     @scope = scope
     @done = false
+    begin
+      @type = type.to_sym
+    rescue NoMethodError
+      raise MissingAssertionTypeError
+    end
     raise MissingAssertionError unless @assertion
     raise ClientUnknownError unless @client
   end
@@ -65,7 +70,7 @@ class AssertionHandler
   end
 
   def register_user
-    identity_obj = Identity.new :provider_id => provider_response['id'], :token => @assertion
+    identity_obj = Identity.new :provider_id => provider_response['id'], :token => @assertion, :provider => @type
     identity_obj.save!
     @user = User.new :name => provider_response['name'], :availability => true, :registered => true, :registered_at => Time.now
     @user.identities << identity_obj

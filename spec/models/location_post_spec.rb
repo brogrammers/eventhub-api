@@ -19,7 +19,8 @@ describe LocationPost do
     expect{Location.find location_id}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  context 'Validation' do
+  context 'validation' do
+
     it 'should not be possible to create a location post without user' do
       location_post = location_posts :one
       location_post.user = nil
@@ -49,5 +50,7 @@ describe LocationPost do
       location_post.content = Array.new(513){[*'0'..'9', *'a'..'z', *'A'..'Z'].sample}.join
       expect{location_post.save!}.to raise_error(ActiveRecord::RecordInvalid)
     end
+
   end
+
 end
