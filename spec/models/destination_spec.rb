@@ -8,8 +8,8 @@ describe Destination do
     user = users :one
     dest.creator = user
     dest.group.creator = dest.creator
-    dest.save!
     user.save!
+    dest.save!
     dest.creator.should equal(users(:one))
   end
 
@@ -70,4 +70,30 @@ describe Destination do
     place.destinations.should include(dest)
   end
 
+  context 'validations' do
+    it 'should not be possible to create a destination without a creator' do
+      dest = destinations :without_creator
+      expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'should not be possible to create a destination without a group' do
+      dest = destinations :without_group
+      expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'should not be possible to create a destination without a choice' do
+      dest = destinations :without_choice
+      dest.group.creator = dest.creator
+      expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'should not be possible to create a destination where creator is not a member or creator of the group' do
+      dest = destinations :valid_destination
+      expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'should not be possible to create a destination where a voter is not a member or creator of the group' do
+
+    end
+  end
 end
