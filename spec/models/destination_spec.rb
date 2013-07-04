@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Destination do
-  fixtures :core_users, :users, :destinations, :groups, :events, :places, :chatrooms
+  fixtures :core_users, :users, :destinations, :groups, :events, :places, :chatrooms, :identities
 
   it 'should have a creator' do
     dest = destinations :without_creator
@@ -84,18 +84,23 @@ describe Destination do
       dest = destinations :valid_destination
       dest.group.creator = users :two
       expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      dest.errors.full_messages.first.should == "Creator #{I18n.translate!('activerecord.errors.models.destination.attributes.creator.member_or_creator')}"
     end
 
     it 'should not be possible to create a destination where a voter is not a member or creator of the group' do
       dest = destinations :valid_destination
       dest.voters << users(:two)
       expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      dest.errors.full_messages.first.should == "Voters #{I18n.translate!('activerecord.errors.models.destination.attributes.voters.member_or_creator')}"
     end
 
     it 'should not be possible to allow creator to vote for his destination' do
       dest = destinations :valid_destination
       dest.voters << dest.creator
       expect{ dest.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      dest.errors.full_messages.first.should == "Creator #{I18n.translate!('activerecord.errors.models.destination.attributes.creator.cant_vote')}"
     end
+
+
   end
 end

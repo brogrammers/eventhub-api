@@ -5,11 +5,11 @@ en:
         location:
           attributes:
             latitude:
-              less_than: &invalid "'%{value}' is invalid"
-              greater_than: *invalid
+              less_than: &invalid_latitude_longitude "'%{value}' is invalid"
+              greater_than: *invalid_latitude_longitude
             longitude:
-              less_than: *invalid
-              greater_than: *invalid
+              less_than: *invalid_latitude_longitude
+              greater_than: *invalid_latitude_longitude
         event:
           attributes:
             start_time:
@@ -28,3 +28,10 @@ en:
           attributes:
             user:
               not_member: 'does not belong to members or creator of the groups chatroom'
+        destination:
+          attributes:
+            creator:
+              member_or_creator: &member_or_creator 'of destination must be either a creator or member of group of this destination'
+              cant_vote: 'of destination cannot vote for it'
+            voters:
+              member_or_creator: *member_or_creator
