@@ -22,8 +22,4 @@ class User < ActiveRecord::Base
 
   validates :availability, :registered, :registered_at, :presence => true
 
-
-  def can_see?(group)
-    return ( groups_created.include? group or groups_member_of.include? group  or groups_invited_to.include? group  )
-  end
 end

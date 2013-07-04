@@ -15,18 +15,24 @@ module Api
       end
 
       def update
-
+        @group = Group.find params[:id]
+        raise ActiveRecord::RecordNotFound unless @group.can_be_modified_by? @current_user
+        @group.name = params[:name] unless params[:name].nil?
+        @group.description = params[:description] unless params[:description].nil?
+        @group.save!
       end
 
       def show
         @group = Group.find params[:id]
-        if(@current_user.can_see? @group)
-            @group
-        else
-            raise ActiveRecord::RecordNotFound.new
-        end
+        raise ActiveRecord::RecordNotFound unless @group.can_be_seen_by? @current_user
+        @group
       end
 
+      def destroy
+        @group = Group.find params[:id]
+        raise ActiveRecord::RecordNotFound unless @group.can_be_modified_by? @current_user
+        @group.destroy
+      end
     end
   end
 end
