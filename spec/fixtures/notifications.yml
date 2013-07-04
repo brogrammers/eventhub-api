@@ -1,4 +1,4 @@
 one:
   title: Added to a group
-  read: false
+  read: 0
   payload: "{message: 'blah'}"

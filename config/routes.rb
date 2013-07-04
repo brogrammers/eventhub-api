@@ -2,6 +2,12 @@ EventhubApi::Application.routes.draw do
 
   use_doorkeeper
 
+  namespace :api do
+    namespace :v1 do
+      resources :me, :only => [:index]
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 
   has_one :location, :as => :locationable, :dependent => :destroy
 
-  has_many :friendships
+  has_many :friendships, :class_name => 'Friendship', :foreign_key => 'member_id'
   has_many :friends, :through => :friendships
 
   has_many :inverse_friendships, :class_name => 'Friendship', :foreign_key => 'friend_id'
