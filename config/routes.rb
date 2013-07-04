@@ -5,6 +5,7 @@ EventhubApi::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :me, :only => [:index]
+      resources :groups
     end
   end
 
