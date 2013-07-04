@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Event do
-  fixtures :events, :comments, :offers, :places, :destinations, :users, :core_users
+  fixtures :events, :comments, :offers, :places, :destinations, :users, :core_users, :groups
 
   context 'comments' do
 
@@ -74,8 +74,9 @@ describe Event do
   context 'Destinations' do
     it 'should be possible to add destination to event' do
       event = events :one
-      dest = destinations :one
+      dest = destinations :without_choice
       event.destinations << dest
+      dest.group.creator = dest.creator
       dest.save!
       event.save!
       event.destinations.should include(dest)
@@ -84,7 +85,8 @@ describe Event do
 
     it 'when event is destroyed it should destroy all destinations which have this place as their choice' do
       event = events :one
-      dest = destinations :one
+      dest = destinations :without_choice
+      dest.group.creator = dest.creator
       event.destinations << dest
       dest.save!
       event.save!

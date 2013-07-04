@@ -16,3 +16,9 @@ three:
   description: descr2
   user_id: 2
 
+four:
+  id: 4
+  name: group4
+  description: descr4
+  user_id: 1
+
