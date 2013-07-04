@@ -2,7 +2,7 @@ module Api
   module V1
     class MeController < BaseController
 
-      def show
+      def index
         @current_user
       end
 

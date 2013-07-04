@@ -4,7 +4,7 @@ EventhubApi::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get '/me', :to => 'me#show'
+      resources :me, :only => [:index]
     end
   end
 
