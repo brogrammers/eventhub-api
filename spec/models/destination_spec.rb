@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Destination do
-  fixtures :core_users, :users, :destinations, :groups, :events, :places, :chatrooms
+  fixtures :core_users, :users, :destinations, :groups, :events, :places, :chatrooms, :identities
 
   it 'should have a creator' do
     dest = destinations :without_creator
