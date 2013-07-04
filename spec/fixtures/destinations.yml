@@ -30,5 +30,9 @@ valid_destination:
   group_id: 4
   core_user_id: 1
 
+valid_destination_without_choice:
+  id: 7
+  core_user_id: 1
+  group_id: 4
 
 

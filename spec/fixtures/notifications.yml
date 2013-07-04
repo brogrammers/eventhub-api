@@ -1,4 +1,4 @@
 one:
   title: Added to a group
   read: 0
-  payload: "{message: 'blah'}"
+  payload: '{"test":"test"}'
