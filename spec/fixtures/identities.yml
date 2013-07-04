@@ -3,17 +3,18 @@ one:
   token: 1234567890
   identifiable_id: 1
   identifiable_type: CoreUser
+  provider_cd: 0
 
 two:
   provider_id: 2
   token: 1234567890
   identifiable_id: 5
   identifiable_type: CoreUser
+  provider_cd: 0
 
 three:
   provider_id: 3
   token: 1234567890
   identifiable_id: 2
   identifiable_type: CoreUser
-
-
+  provider_cd: 0
