@@ -9,6 +9,8 @@ two:
   id: 2
   latitude: 53.344103999999990000
   longitude: -6.267493699999932000
+  city: Dublin
+  country: Ireland
   locationable_id: 1
   locationable_type: Place
 
@@ -16,5 +18,16 @@ three:
   id: 3
   latitude: 53.344103999999990000
   longitude: -6.267493699999932000
+  city: Dublin
+  country: Ireland
   locationable_id: 1
   locationable_type: LocationPost
+
+four:
+  id: 4
+  latitude: 53.344103999999990000
+  longitude: -6.267493699999932000
+  city: Dublin
+  country: Ireland
+  locationable_id: 1
+  locationable_type: User
