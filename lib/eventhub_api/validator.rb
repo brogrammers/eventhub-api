@@ -5,5 +5,6 @@ module EventhubApi
     autoload :Group, File.join(File.dirname(__FILE__), 'validator', 'group')
     autoload :Message, File.join(File.dirname(__FILE__), 'validator', 'message')
     autoload :Location, File.join(File.dirname(__FILE__), 'validator', 'location')
+    autoload :Destination, File.join(File.dirname(__FILE__), 'validator', 'destination')
   end
 end

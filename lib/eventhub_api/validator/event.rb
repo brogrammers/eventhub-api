@@ -9,7 +9,6 @@ module EventhubApi
         unless record.end_time != nil and record.start_time  and record.end_time > record.start_time
           record.errors[:end_time] << I18n.translate!('activerecord.errors.models.event.attributes.end_time.after_start_time')
         end
-
       end
     end
   end
