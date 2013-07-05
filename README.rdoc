@@ -86,14 +86,13 @@ To get the eventhub access token :
     $ refresh_token - provides an easy way to refresh that access token you have
     $ scope - ??
 
+4. Given the eventub access token, you can now make request to the API's. Try /me. All you need to do is for every api request, there must a HTTP header
+    $ key : Authorization   value : Bearer <eventhub_access_token>  - the space between bearer and token is important
 
 
 Note that there is no true register & login process, if there is no such user, but the authentication with
 Facebook went fine, then we add that user to the database, otherwise we just update some information.
 But you do not care, the whole process is transparent to you, just make a call to /oauth/token to
 get our token.
-
-4. Given the eventub access token, you can now make request to the API's. All you need to do is for every api request, there must a HTTP header
-    $ key : Authorization   value : Bearer <eventhub_access_token>  - the space between bearer and token is important
 
 
