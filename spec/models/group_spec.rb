@@ -204,10 +204,11 @@ describe Group do
       group.errors.full_messages.first.should == "User #{I18n.translate!('activerecord.errors.models.group.attributes.user.single_user')}"
     end
 
-    it 'should not be possible to save a group without a chatroom' do
+    it 'should create a chatroom unless a chatroom exists' do
       group = groups :two
       group.chatroom = nil
-      expect{ group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect{ group.save! }.not_to raise_error(ActiveRecord::RecordInvalid)
+      group.chatroom.class.should == Chatroom
     end
 
   end

@@ -13,6 +13,8 @@ class Group < ActiveRecord::Base
 
   has_one :chatroom, :dependent => :destroy
 
+  before_validation :generate_chatroom, :unless => lambda { self.chatroom }
+
   validates :description, :name, :creator, :chatroom,  :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
@@ -24,5 +26,10 @@ class Group < ActiveRecord::Base
 
   def can_be_seen_by?(user)
     return ( user == creator or group_members.include? user or pending_members.include? user )
+  end
+
+  def generate_chatroom
+    self.chatroom = Chatroom.new
+    self.chatroom.group = self
   end
 end
