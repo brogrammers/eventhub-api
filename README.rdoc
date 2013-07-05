@@ -86,7 +86,7 @@ To get the eventhub access token :
     $ refresh_token - provides an easy way to refresh that access token you have
     $ scope - ??
 
-4. Given the eventub access token, you can now make request to the API's. Try /me. All you need to do is for every api request, there must a HTTP header
+4. Given the eventub access token, you can now make request to the API. Try /me. All you need to do is, for every api request, there must a following HTTP header
     $ key : Authorization   value : Bearer <eventhub_access_token>  - the space between bearer and token is important
 
 
