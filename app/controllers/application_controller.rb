@@ -8,6 +8,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def find_current_user
-    @current_user ||= User.find doorkeeper_token.resource_owner_id
+    @current_user ||= User.find doorkeeper_token.resource_owner_id if doorkeeper_token
   end
 end
