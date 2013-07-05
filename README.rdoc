@@ -35,8 +35,8 @@ or via rake
 Eventhub API has a working oAuth provider. Therefore even locally
 the full authentication process is in place. Moreover it works just like
 in production, as a result, in order to gain access to any functionality
-you need an App ID and App Secret. Those two pieces of information
-allow us to indentify each application using Eventhub API.
+you need register your application to use the API. That means obtaining App ID and App Secret.
+Those two pieces of information allow us to indentify each application using Eventhub API.
 
 == Obtaining App ID & Secret
 
