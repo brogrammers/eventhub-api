@@ -35,7 +35,7 @@ or via rake
 Eventhub API has a working oAuth provider. Therefore even locally
 the full authentication process is in place. Moreover it works just like
 in production, as a result, in order to gain access to any functionality
-you need register your application to use the API. That means obtaining App ID and Secret.
+you need to register your application to use the API. That means obtaining App ID and Secret.
 Those two pieces of information allow us to indentify each application using Eventhub API.
 
 == Obtaining App ID & Secret
@@ -50,8 +50,7 @@ You need to create an application :
     $ Name - name of your application can which be any string. eg. 'eventhub app'
     $ Redirect uri - the address at which you are running your app. eg. 'http://localhost:3000'
 
-3. You will be presented with your newly genreated App ID & Secret. Save them. If you foget what they were,
-just go back to http://localhost:3000/oauth/applications, it will be listed there.
+3. You will be presented with your newly generated App ID & Secret. Save them. If you forget what they were, just go back to http://localhost:3000/oauth/applications, it will be listed there.
 
 == Using the App ID & Secret to register and login users of an application.
 
@@ -71,7 +70,7 @@ To get the eventhub access token :
     $ key : assertion_type  value : 'facebook' (this means that the other oauth provider is facebook, we are planning on adding twitter etc.)
     $ key : assertion value value : your valid facebook access token, google on how to get it.
 
-3. After you send the request and all the data is valid you should see a following JSON response :
+3. After you send the request and if all the data is valid, you should see a following JSON response :
 
     {
         "access_token": "d22665fa94ddad82b818cc392de7a66bacf6e684fe825b22e83cd8ccb13c4a7d",
@@ -86,5 +85,15 @@ To get the eventhub access token :
     $ expires_in - seconds untill this token will expire
     $ refresh_token - provides an easy way to refresh that access token you have
     $ scope - ??
+
+
+
+Note that there is no true register & login process, if there is no such user, but the authentication with
+Facebook went fine, then we add that user to the database, otherwise we just update some information.
+But you do not care, the whole process is transparent to you, just make a call to /oauth/token to
+get our token.
+
+4. Given the eventub access token, you can now make request to the API's. All you need to do is for every api request, there must a HTTP header
+    $ key : Authorization   value : Bearer <eventhub_access_token>  - the space between bearer and token is important
 
 
