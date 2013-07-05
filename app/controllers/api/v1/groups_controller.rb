@@ -8,10 +8,8 @@ module Api
 
       def create
         @group = Group.new :name => params[:name], :description => params[:description]
-        @group.chatroom = Chatroom.new
         @current_user.groups_created << group
         @group.save!
-        @group.chatroom.save!
       end
 
       def update
