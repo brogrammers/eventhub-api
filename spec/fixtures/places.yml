@@ -3,6 +3,7 @@ one:
   name: place1
   description: desc1
   visibility_type_cd: 1
+  creator_id: 1
 
 two:
   id: 2
