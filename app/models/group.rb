@@ -13,8 +13,15 @@ class Group < ActiveRecord::Base
 
   has_one :chatroom, :dependent => :destroy
 
+  before_validation :generate_chatroom, :unless => lambda { self.chatroom }
+
   validates :description, :name, :creator, :chatroom,  :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
   validates_with EventhubApi::Validator::Group
+
+  def generate_chatroom
+    self.chatroom = Chatroom.new
+    self.chatroom.group = self
+  end
 end
