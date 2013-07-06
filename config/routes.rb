@@ -5,8 +5,9 @@ EventhubApi::Application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :me, :only => [:index]
-      get '/groups/:id/members', to: 'groups#members', as: 'group'
-      resources :groups
+      resources :groups do
+        resources :members, :controller => 'group_members'
+      end
     end
   end
 

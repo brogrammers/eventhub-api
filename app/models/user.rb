@@ -22,4 +22,8 @@ class User < ActiveRecord::Base
 
   validates :availability, :registered, :registered_at, :presence => true
 
+  def is_friend_of?(user)
+    return ( friends.include? user or inverse_friends.include? user )
+  end
+
 end

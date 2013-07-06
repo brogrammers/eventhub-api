@@ -1,3 +1,3 @@
-object @group => :groups
+object @group => :group
 
 attributes :id, :name, :description
