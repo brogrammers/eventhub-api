@@ -74,15 +74,6 @@ describe Group do
       PendingMember.all.size.should eq(0)
     end
 
-    it 'should not be possible to add same user as a member twice' do
-      user = users :one
-      group = groups :one
-      group.invited << user
-      group.invited << user
-      user.save!
-      expect{ group.save! }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-
   end
 
   context 'members' do
@@ -124,7 +115,6 @@ describe Group do
       group = groups :one
       group.members << user
       group.members << user
-      user.save!
       expect{ group.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 

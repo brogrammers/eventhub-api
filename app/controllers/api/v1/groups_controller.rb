@@ -2,6 +2,7 @@ module Api
   module V1
     class GroupsController < BaseController
 
+      doorkeeper_for :index, :create, :update, :show, :destroy
       before_filter :can_user_access_group?, :only => [:update, :show, :destroy]
       before_filter :can_user_modify_group?, :only => [:update, :destroy]
 
@@ -33,6 +34,8 @@ module Api
 
       private
 
+      #validations
+
       def can_user_access_group?
         @group = Group.find params[:id]
         raise ActiveRecord::RecordNotFound unless @group.can_be_seen_by? @current_user
@@ -40,13 +43,12 @@ module Api
 
       def can_user_modify_group?
         @group = Group.find params[:id]
-        raise  unless @group.can_be_modified_by? @current_user
+        raise unless @group.can_be_modified_by? @current_user
       end
 
       def group_params
-        params.permit({:name => []}, :description)
+        params.permit(:description, :name)
       end
-
     end
   end
 end
