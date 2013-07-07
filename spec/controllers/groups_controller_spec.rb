@@ -207,15 +207,13 @@ describe Api::V1::GroupsController do
     end
 
     context 'with invalid attributes' do
-
       it 'should return not found if group should not be seen by the user' do
         group = Group.new
-        group.creator = users :two
         Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        group.creator = users :two
         group.should_not_receive(:destroy)
-        delete :destroy, :id => 1, :format => :json
+        expect{ delete :destroy, :id => 1, :format => :json }.to raise_error(ActiveRecord::RecordNotFound)
       end
-
 
       it 'should not delete group with specified attribute' do
 
