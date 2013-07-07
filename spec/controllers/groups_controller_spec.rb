@@ -47,7 +47,6 @@ describe Api::V1::GroupsController do
 
     end
 
-
     context 'with invalid attributes' do
       it 'should not create new group' do
         group = Group.new
@@ -133,22 +132,113 @@ describe Api::V1::GroupsController do
 
   describe 'GET /groups/:id' do
     context 'with valid attributes' do
+      it 'should fetch group with specified id' do
+        group = Group.new
+        group.creator = users :one
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        get :show, :id => 1, :format => :json
+      end
 
+      it 'should render show template' do
+        group = Group.new
+        group.creator = users :one
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        get :show, :id => 1, :format => :json
+        response.should render_template(:show)
+      end
+
+      it 'should return 200 to the caller' do
+        group = Group.new
+        group.creator = users :one
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        get :show, :id => 1, :format => :json
+        response.response_code.should == 200
+      end
     end
 
     context 'with invalid attributes' do
 
+      it 'should throw record not found if group id does not exsit' do
+        expect{ get :show, :id => '9999'}.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'should throw record not found if group should not be seen by the user' do
+        group = Group.new
+        group.creator = users :two
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        expect { get :show, :id => 1 }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'should not render show template in case of error' do
+        expect{ get :show, :id => '9999'}.to raise_error(ActiveRecord::RecordNotFound)
+        response.should_not render_template(:show)
+      end
     end
   end
 
 
   describe 'DELETE /groups/:id' do
     context 'with valid attributes' do
+      it 'should delete group with specified attribute' do
+        group = Group.new
+        group.creator = users :one
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        group.should_receive(:destroy)
+        delete :destroy, :id => '1', :format => :json
+      end
 
+      it 'should render delete temaplate' do
+        group = Group.new
+        group.creator = users :one
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        group.should_receive(:destroy)
+        delete :destroy, :id => '1', :format => :json
+        response.should render_template(:destroy)
+      end
+
+      it 'should return 200' do
+        group = Group.new
+        group.creator = users :one
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        group.should_receive(:destroy)
+        delete :destroy, :id => '1', :format => :json
+        response.response_code.should == 200
+      end
     end
 
     context 'with invalid attributes' do
 
+      it 'should return not found if group should not be seen by the user' do
+        group = Group.new
+        group.creator = users :two
+        Group.should_receive(:find).any_number_of_times.with('1').and_return(group)
+        group.should_not_receive(:destroy)
+        delete :destroy, :id => 1, :format => :json
+      end
+
+
+      it 'should not delete group with specified attribute' do
+
+      end
+
+      it 'should not render delete template' do
+
+      end
+
+      it 'should return not found if group was not found' do
+
+      end
+
+      it 'should return not found if group should not be seen by the user' do
+
+      end
+
+      it 'should not allow member to delete group' do
+
+      end
+
     end
+
   end
+
 end
