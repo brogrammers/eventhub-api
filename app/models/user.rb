@@ -26,4 +26,12 @@ class User < ActiveRecord::Base
     return ( friends.include? user or inverse_friends.include? user )
   end
 
+  def is_invited_to?(group)
+    self.groups_invited_to.include? group
+  end
+
+  def is_member_of?(group)
+    self.groups_member_of.include? group
+  end
+
 end

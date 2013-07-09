@@ -32,4 +32,31 @@ class Group < ActiveRecord::Base
     self.chatroom = Chatroom.new
     self.chatroom.group = self
   end
+
+  def invite_user!(user, by_user)
+    if user.is_member_of? self or user.is_invited_to? self or not user.is_friend_of? by_user
+      false
+    else
+      invited << user
+      true
+    end
+  end
+
+  def accept_invitation(user)
+    if user.is_invited_to? self
+      invited.delete user
+      members << user
+    else
+      false
+    end
+  end
+
+  def decline_invitation(user)
+    if user.is_invited_to? self
+      invited.delete user
+      true
+    else
+      false
+    end
+  end
 end
