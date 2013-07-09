@@ -1,6 +1,6 @@
 == Eventhub API
 
-{<img src="http://ci.eventhub.eu:8081/buildStatus/icon?job=Eventhub-Api" />}[http://ci.eventhub.eu:8081/job/Eventhub-Api/]
+{<img src="http://ci.eventhub.eu:8081/job/Eventhub-Api/badge/icon" />}[http://ci.eventhub.eu:8081/job/Eventhub-Api/]
 
 The Eventhub API is running on Ruby on Rails.
 Read up on Rails documentation: http://guides.rubyonrails.org/
