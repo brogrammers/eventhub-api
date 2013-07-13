@@ -6,17 +6,23 @@ class Location < ActiveRecord::Base
   validates :latitude , numericality: { greater_than:  -90, less_than:  90 }, allow_nil: false, allow_blank: false, presence: true
   validates :longitude, numericality: { greater_than: -180, less_than: 180 }, allow_nil: false, allow_blank: false, presence: true
 
-  before_validation :find_location, :unless => lambda { self.city and self.country }
-
   validates_with EventhubApi::Validator::Location
 
-  private
-
-  def find_location
-    result = Geocoder.search("#{self.latitude},#{self.longitude}")
-    unless result.empty? or (result.first.city.nil? and result.first.country.nil?)
-      self.city = result.first.city
-      self.country = result.first.country
+  class << self
+    def all_within(latitude, longitude, offset)
+      center_point = [latitude, longitude]
+      box = Geocoder::Calculations.bounding_box(center_point, offset)
+      Location.within_bounding_box(box)
     end
   end
+
+  reverse_geocoded_by :latitude, :longitude do |record,results|
+    geo = results.first
+    if geo
+      record.city    = geo.city
+      record.country = geo.country
+    end
+  end
+
+  before_validation :reverse_geocode, :unless => lambda { self.city and self.country }
 end

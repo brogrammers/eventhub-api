@@ -15,4 +15,18 @@ class Place < ActiveRecord::Base
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
   validates :visibility_type, :as_enum => true
+
+  class << self
+    def all_within(latitude, longitude, offset)
+      places = [ ]
+      Location.all_within(latitude, longitude, offset).each do |location|
+        begin
+          places << Place.find(location.locationable_id) if location.locationable_type == 'Place'
+        rescue ActiveRecord::RecordNotFound
+          # ignore for now
+        end
+      end
+      places
+    end
+  end
 end
