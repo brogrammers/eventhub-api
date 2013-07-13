@@ -24,6 +24,7 @@ describe Location do
     end
 
     it 'should query all locations within a location' do
+      # TODO: Once we have factorygirl we can replace this ugly code :D
       Location.create! :latitude => LATITUDE,     :longitude => LONGITUDE
       Location.create! :latitude => LATITUDE,     :longitude => LONGITUDE
       Location.create! :latitude => LATITUDE,     :longitude => LONGITUDE
