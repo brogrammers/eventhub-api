@@ -59,7 +59,7 @@ module ViewHelper
 
   def render_places_delete_view_json
     @place = places :one
-    render_view @place, :object => 'places', :partial => 'delete', :object_name => 'place'
+    render_view @place, :object => 'places', :partial => 'destroy', :object_name => 'place'
   end
 
   def render_places_location_view_json
