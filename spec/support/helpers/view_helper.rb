@@ -77,6 +77,16 @@ module ViewHelper
     render_view @comment, :object => 'places', :partial => 'comment', :object_name => 'comment'
   end
 
+  def render_errors_record_invalid
+    @place = places :one
+    render_view @place, :object => 'errors', :partial => 'record_invalid', :object_name => 'error'
+  end
+
+  def render_errors_record_not_found
+    @place = places :one
+    render_view @place, :object => 'errors', :partial => 'record_not_found', :object_name => 'error'
+  end
+
   def render_view(object, options = { })
     @rendered_view = JSON.parse(Rabl::Renderer.json(object, "api/v1/#{options[:object]}/#{options[:partial]}"))[options[:object_name] || options[:object]]
     @rendered_view = @rendered_view[0] if @rendered_view.is_a? Array
