@@ -8,8 +8,8 @@ class ApplicationController < ActionController::Base
     render status: 400, template: 'api/v1/errors/record_invalid'
   end
 
-  rescue_from ActiveRecord::RecordNotFound do |exception|
-    @object = exception.record
+  rescue_from ActiveRecord::RecordNotFound do
+    @object = Object.new
     render status: 404, template: 'api/v1/errors/record_not_found'
   end
 
