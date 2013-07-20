@@ -21,4 +21,17 @@ class User < ActiveRecord::Base
   has_many :location_posts, :dependent => :destroy
 
   validates :availability, :registered, :registered_at, :presence => true
+
+  def is_friend_of?(user)
+    return ( friends.include? user or inverse_friends.include? user )
+  end
+
+  def is_invited_to?(group)
+    self.groups_invited_to.include? group
+  end
+
+  def is_member_of?(group)
+    self.groups_member_of.include? group
+  end
+
 end

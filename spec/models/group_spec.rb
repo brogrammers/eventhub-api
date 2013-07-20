@@ -8,6 +8,64 @@ describe Group do
     expect { group.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it 'should allow creator to modify a group' do
+    group = create(:group)
+    group.can_be_modified_by?(group.creator).should be_true
+  end
+
+  it 'should not allow member to modify a group' do
+    group = create(:group)
+    member = create(:user)
+    group.members << member
+    group.save!
+    member.save!
+    group.can_be_modified_by?(member).should be_false
+  end
+
+  it 'should not allow a pending member to modify a group' do
+    group = create(:group)
+    invited_user = create(:user)
+    group.invited << invited_user
+    group.save!
+    invited_user.save!
+    group.can_be_modified_by?(invited_user).should be_false
+  end
+
+  it 'should not allow a non relatred user to modify a group' do
+    group = create(:group)
+    user = create(:user)
+    group.can_be_modified_by?(user).should be_false
+  end
+
+  it 'should allow creator to see a group' do
+    group = create(:group)
+    group.can_be_seen_by?(group.creator).should be_true
+  end
+
+  it 'should allow member to see a group' do
+    group = create(:group)
+    user = create(:user)
+    group.members << user
+    group.save!
+    user.save!
+    group.can_be_seen_by?(user).should be_true
+  end
+
+  it 'should allow invited to see a group' do
+    group = create(:group)
+    user = create(:user)
+    group.invited << user
+    group.save!
+    user.save!
+    group.can_be_seen_by?(user).should be_true
+  end
+
+  it 'should not allow a non related user to see a group' do
+    group = create(:group)
+    user = create(:user)
+    group.can_be_seen_by?(user).should be_false
+  end
+
   context 'destinations' do
 
     it 'should add a new destination to a group' do
@@ -37,7 +95,6 @@ describe Group do
       group.destroy
       expect { Destination.find destination.id }.to raise_error(ActiveRecord::RecordNotFound)
     end
-
   end
 
   context 'invited' do
@@ -110,6 +167,14 @@ describe Group do
       GroupMember.all.size.should == 0
     end
 
+    it 'should not be possible to add same user as a member twice' do
+      user = users :one
+      group = groups :one
+      group.members << user
+      group.members << user
+      expect{ group.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
   end
 
   context 'chatroom' do
@@ -148,6 +213,11 @@ describe Group do
       user.groups_created.should include(group)
     end
 
+    it 'should not be possible to create a group without a creator' do
+      group = create(:group)
+      group.creator = nil
+      expect{group.save!}.to raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   context 'validations on save' do

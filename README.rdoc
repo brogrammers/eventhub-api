@@ -30,3 +30,71 @@ run the existing tests with:
     $ rspec
 or via rake
     $ rake spec
+
+
+== Authentication Process
+
+Eventhub API has a working oAuth provider. Therefore even locally
+the full authentication process is in place. Moreover it works just like
+in production, as a result, in order to gain access to any functionality
+you need to register your application to use the API. That means obtaining App ID and Secret.
+Those two pieces of information allow us to indentify each application using Eventhub API.
+
+== Obtaining App ID & Secret
+
+I assume running the webservice locally. Process is the same if running remotely, just adjust URL's.
+You need to create an application :
+
+1. Go to :
+    $ http://localhost:3000/oauth/applications
+
+2. Click new application, and fill in the details :
+    $ Name - name of your application can which be any string. eg. 'eventhub app'
+    $ Redirect uri - the address at which you are running your app. eg. 'http://localhost:3000'
+
+3. You will be presented with your newly generated App ID & Secret. Save them. If you forget what they were, just go back to http://localhost:3000/oauth/applications, it will be listed there.
+
+== Using the App ID & Secret to register and login users of an application.
+
+App ID & Secret allow your client application to use the API. We do not authenticate on per app basis.
+Every single client application, requires access token, that is placed inside HTTP header, which corresponds
+to each unique user of your application. Apart from App ID & Secret to get eventhub access token, you will need
+facebook access token, of the user of your client application. Another words, your user must have a facebook account.
+To get the eventhub access token :
+
+1. Make the following request (use chrome rest client plugin 'postman') :
+    $ POST http://localhost:3000/oauth/token
+
+2. With the following HTTP headers present (the words 'key :' 'value :' should not be in the actual header )
+    $ key : client_id       value : App ID from where you created the application
+    $ key : client_secret   value : Secret from where you created the application
+    $ key : grant_type      value : 'assertion' (there are other types, but this means you supply access token from other oauth provider)
+    $ key : assertion_type  value : 'facebook' (this means that the other oauth provider is facebook, we are planning on adding twitter etc.)
+    $ key : assertion value value : your valid facebook access token, google on how to get it.
+
+3. After you send the request and if all the data is valid, you should see a following JSON response :
+
+    {
+        "access_token": "d22665fa94ddad82b818cc392de7a66bacf6e684fe825b22e83cd8ccb13c4a7d",
+        "token_type": "bearer",
+        "expires_in": 172800,
+        "refresh_token": "d7135b5506a56c92fe14efea3e1ffa9a59d10c29692c55ff0ef5d71bf4b3fa3b",
+        "scope": "public"
+    }
+
+    $ access_token - eventhub access token of your client app can use
+    $ token_type - there are many kinds, we use the one thats called 'bearer'
+    $ expires_in - seconds untill this token will expire
+    $ refresh_token - provides an easy way to refresh that access token you have
+    $ scope - ??
+
+4. Given the eventub access token, you can now make request to the API. Try /me. All you need to do is, for every api request, there must a following HTTP header
+    $ key : Authorization   value : Bearer <eventhub_access_token>  - the space between bearer and token is important
+
+
+Note that there is no true register & login process, if there is no such user, but the authentication with
+Facebook went fine, then we add that user to the database, otherwise we just update some information.
+But you do not care, the whole process is transparent to you, just make a call to /oauth/token to
+get our token.
+
+

@@ -48,3 +48,5 @@ gem 'strong_parameters'
 gem 'geocoder'
 gem 'simple_enum'
 gem 'therubyracer'
+gem 'factory_girl_rails'
+
