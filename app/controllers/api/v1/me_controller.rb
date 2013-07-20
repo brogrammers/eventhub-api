@@ -5,7 +5,6 @@ module Api
       doorkeeper_for :index
 
       def index
-        raise ActiveRecord::RecordNotFound
         @current_user
       end
 
