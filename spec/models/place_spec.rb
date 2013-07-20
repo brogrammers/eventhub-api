@@ -177,7 +177,8 @@ describe Place do
 
     it 'should not be possible to create a place with type other than private / public / certified' do
       place = places :one
-      expect { place.visibility_type = :invalid }.to raise_error(ArgumentError)
+      place.visibility_type = :invalid
+      place.valid?.should == false
     end
 
     it 'should not be possible to create a place without any type' do
