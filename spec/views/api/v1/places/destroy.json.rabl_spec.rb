@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'api/v1/places/delete' do
+describe 'api/v1/places/destroy' do
   fixtures :core_users,
            :users,
            :business_users,
