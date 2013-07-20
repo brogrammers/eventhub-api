@@ -38,7 +38,7 @@ module Api
 
       def can_user_access_group?
         @group = Group.find params[:id]
-         raise ActiveRecord::RecordNotFound unless @group.can_be_seen_by? @current_user
+        raise ActiveRecord::RecordNotFound unless @group.can_be_seen_by? @current_user
       end
 
       def can_user_modify_group?

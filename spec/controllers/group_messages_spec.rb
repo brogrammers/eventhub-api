@@ -2,12 +2,15 @@ require 'spec_helper'
 
 describe Api::V1::GroupMessagesController do
 
+  render_views
+  fixtures :users, :core_users
+  owner_id = 1
+
+  let(:token) { stub :accessible? => true, :resource_owner_id => owner_id }
+
   before :each do
 
     class ApplicationController
-      def find_current_user
-      end
-
       def current_user=(user)
         @current_user = user
       end
@@ -16,6 +19,8 @@ describe Api::V1::GroupMessagesController do
         @current_user
       end
     end
+
+    controller.stub(:doorkeeper_token) { token }
   end
 
 
@@ -23,12 +28,14 @@ describe Api::V1::GroupMessagesController do
     context 'with valid parameters' do
       it 'returns all messages of the groups chatroom' do
         message = create(:message)
+        controller.current_user = message.chatroom.group.creator
         get :index, :group_id => message.chatroom.group.id, :format => :json
-        assigns[:messages].should == [message]
+        assigns(:messages).should == [message]
       end
 
       it 'renders correct template' do
         message = create(:message)
+        controller.current_user = message.chatroom.group.creator
         get :index, :group_id => message.chatroom.group.id, :format => :json
         response.should render_template('index')
       end
@@ -44,7 +51,7 @@ describe Api::V1::GroupMessagesController do
 
       it 'returns not found when group with specified id does not exist' do
         group = create(:group)
-        get :index, :group_id => group.id - 1, :format => :json
+        expect get :index, :group_id => group.id - 1, :format => :json
         response.status.should == 404
       end
 
@@ -57,29 +64,35 @@ describe Api::V1::GroupMessagesController do
   context 'GET api/v1/groups/:group_id/messages/:id' do
     context 'with valid parameters' do
        it 'returns message with specified id of the groups chatroom' do
-         message = create(:message)
-         get :index, :group_id => message.chatroom.group.id, :id => message.id, :format => :json
-         assigns[:messages].should == message
+         message = FactoryGirl.create :message
+         controller.current_user = message.chatroom.group.creator
+         get :show, :group_id => message.chatroom.group.id, :id => message.id, :format => :json
+         assigns(:message).should == message
        end
 
        it 'renders correct template' do
          message = create(:message)
-         get :index, :group_id => message.chatroom.group.id, :id => message.id, :format => :json
+         get :show, :group_id => message.chatroom.group.id, :id => message.id, :format => :json
          response.should render_template('show')
        end
     end
 
     context 'with invalid parameters' do
       it 'returns not found when user is not supposed to see that group' do
-        group = create(:group)
+        message = create(:message)
         controller.current_user = create(:user)
-        get :index, :group_id => group.id, :id => 1, :format => :json
+        get :show, :group_id => message.chatroom.group.id, :id => message.id, :format => :json
         response.status.should == 404
       end
 
       it 'returns not found when group with specified id does not exist' do
         group = create(:group)
-        get :index, :group_id => 0, :id => 1, :format => :json
+        begin
+          get :show, :group_id => 0, :id => 1, :format => :json
+        rescue ActiveRecord::RecordNotFound
+
+        end
+
         response.status.should == 404
       end
 
@@ -99,15 +112,15 @@ describe Api::V1::GroupMessagesController do
     context 'with valid parameters' do
       it 'creates new message' do
         group = create(:group)
-        get :create, :group_id => group.id, :content => 'message content', :format => :json
-        assigns[:message].content.should == 'message content'
-        assigns[:message].chatroom.should == group.chatroom
-        group.chatroom.messages.size.should == 1
+        controller.current_user = group.creator
+        post :create, :group_id => group.id, :content => 'message content', :format => :json
+        assigns(:message).content.should == 'message content'
       end
 
       it 'renders correct template' do
         group = create(:group)
-        get :create, :group_id => group.id, :content => 'message content', :format => :json
+        controller.current_user = group.creator
+        post :create, :group_id => group.id, :content => 'message content', :format => :json
         response.should render_template('create')
       end
 
@@ -129,13 +142,15 @@ describe Api::V1::GroupMessagesController do
 
       it 'returns bad request when content is not present' do
         group = create(:group)
-        get :index, :group_id => group.id, :format => :json
+        controller.current_user = group.creator
+        get :create, :group_id => group.id, :format => :json
         response.status.should == 400
       end
 
       it 'returns bad request when content is empty' do
        group = create(:group)
-       get :index, :group_id => group.id, :content => '', :format => :json
+       controller.current_user = group.creator
+       get :create, :group_id => group.id, :content => '', :format => :json
        response.status.should == 400
       end
 
