@@ -3,19 +3,19 @@ class ApplicationController < ActionController::Base
 
   respond_to :json, :xml
 
-  protect_from_forgery
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    @object = exception.record
+    render status: 400, template: 'api/v1/errors/record_invalid'
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    @object = exception.record
+    render status: 404, template: 'api/v1/errors/record_not_found'
+  end
 
   protected
 
   def find_current_user
     @current_user ||= User.find doorkeeper_token.resource_owner_id if doorkeeper_token
-  end
-
-  rescue_from ActiveRecord::RecordNotFound do |exception|
-    render status: 404
-  end
-
-  rescue_from ActiveRecord::RecordInvalid do |exception|
-    render status: 400
   end
 end
