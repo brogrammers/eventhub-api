@@ -87,12 +87,8 @@ describe Api::V1::GroupMessagesController do
 
       it 'returns not found when group with specified id does not exist' do
         group = create(:group)
-        begin
-          get :show, :group_id => 0, :id => 1, :format => :json
-        rescue ActiveRecord::RecordNotFound
-
-        end
-
+        controller.current_user = group.creator
+        get :show, :group_id => 0, :id => 1, :format => :json
         response.status.should == 404
       end
 
