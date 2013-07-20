@@ -11,15 +11,18 @@ module Api
       end
 
       def create
-        @group = Group.new(group_params)
-        @current_user.groups_created << @group
+        @group = Group.new :name => params[:name], :description => params[:description]
+        @group.creator = @current_user
         @group.save!
+        @group
       end
 
       def update
         @group = Group.find params[:id]
-        @group.update_attributes!(group_params)
+        @group.name = params[:name] || @group.name
+        @group.description = params[:description] || @group.description
         @group.save!
+        @group
       end
 
       def show
@@ -37,18 +40,15 @@ module Api
       #validations
 
       def can_user_access_group?
-        @group = Group.find params[:id]
-        raise ActiveRecord::RecordNotFound unless @group.can_be_seen_by? @current_user
+        group = Group.find params[:id]
+        raise ActiveRecord::RecordNotFound unless group.can_be_seen_by? @current_user
       end
 
       def can_user_modify_group?
-        @group = Group.find params[:id]
-        raise unless @group.can_be_modified_by? @current_user
+        group = Group.find params[:id]
+        raise ActiveRecord::RecordInvalid.new(group) unless group.can_be_modified_by? @current_user
       end
 
-      def group_params
-        params.permit(:description, :name)
-      end
     end
   end
 end

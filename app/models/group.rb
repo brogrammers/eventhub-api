@@ -15,17 +15,17 @@ class Group < ActiveRecord::Base
 
   before_validation :generate_chatroom, :unless => lambda { self.chatroom }
 
-  validates :description, :name, :creator, :chatroom,  :presence => true
+  validates :description, :name, :creator, :chatroom, :presence => true
   validates :name, :length => { :minimum => 5, :maximum => 256 }
   validates :description, :length => { :minimum => 5, :maximum => 1024 }
   validates_with EventhubApi::Validator::Group
 
   def can_be_modified_by?(user)
-    return user == creator
+    user == creator
   end
 
   def can_be_seen_by?(user)
-    return ( user == creator or group_members.include? user or pending_members.include? user )
+    user == creator or members.include? user or invited.include? user
   end
 
   def generate_chatroom

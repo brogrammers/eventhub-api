@@ -5,6 +5,7 @@ module Api
       doorkeeper_for :index, :show, :destroy
       before_filter :can_user_access_group?, :only => [:index, :show, :destroy, :update]
 
+
       def index
         group = Group.find params[:group_id]
         raise ActiveRecord::RecordNotFound unless group.can_be_seen_by? @current_user
@@ -17,6 +18,10 @@ module Api
         @member = group.members.find members_params[:id]
       end
 
+      def create
+
+      end
+
       def destroy
         group = Group.find params[:group_id]
         raise ActiveRecord::RecordNotFound unless group.can_be_seen_by? @current_user
@@ -25,7 +30,7 @@ module Api
 
       def can_user_access_group?
         @group = Group.find params[:id]
-        ActiveRecord::RecordNotFound  unless @group.can_be_seen_by? @current_user
+        ActiveRecord::RecordNotFound unless @group.can_be_seen_by? @current_user
       end
 
       def members_params
