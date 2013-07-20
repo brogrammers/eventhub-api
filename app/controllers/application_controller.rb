@@ -13,6 +13,11 @@ class ApplicationController < ActionController::Base
     render status: 404, template: 'api/v1/errors/record_not_found'
   end
 
+  rescue_from ActiveRecord::NotPrivilegedError do
+    @object = Object.new
+    render status: 403, template: 'api/v1/errors/not_privileged_error'
+  end
+
   protected
 
   def find_current_user

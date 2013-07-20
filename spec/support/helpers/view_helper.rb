@@ -87,6 +87,11 @@ module ViewHelper
     render_view @place, :object => 'errors', :partial => 'record_not_found', :object_name => 'error'
   end
 
+  def render_errors_not_privileged_error
+    @place = places :one
+    render_view @place, :object => 'errors', :partial => 'not_privileged_error', :object_name => 'error'
+  end
+
   def render_view(object, options = { })
     @rendered_view = JSON.parse(Rabl::Renderer.json(object, "api/v1/#{options[:object]}/#{options[:partial]}"))[options[:object_name] || options[:object]]
     @rendered_view = @rendered_view[0] if @rendered_view.is_a? Array
