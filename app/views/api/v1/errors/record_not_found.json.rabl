@@ -1,5 +1,5 @@
 object @object => :error
 
-node :messages do |record|
-  record.errors.full_messages
+node :messages do
+  [ 'Model not found' ]
 end
