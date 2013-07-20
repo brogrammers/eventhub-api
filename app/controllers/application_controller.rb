@@ -3,7 +3,15 @@ class ApplicationController < ActionController::Base
 
   respond_to :json, :xml
 
-  protect_from_forgery
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    @object = exception.record
+    render status: 400, template: 'api/v1/errors/record_invalid'
+  end
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    @object = exception.record
+    render status: 404, template: 'api/v1/errors/record_not_found'
+  end
 
   protected
 
