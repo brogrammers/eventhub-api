@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<me>
+  <id type="integer">1</id>
+  <name>Max Hoffmann</name>
+  <availability type="boolean">true</availability>
+  <location>
+    <latitude type="float">53.3428</latitude>
+    <longitude type="float">-6.2661</longitude>
+    <city>Dublin</city>
+    <country>Ireland</country>
+  </location>
+  <groups-created type="array">
+    <groups-created>
+      <id type="integer">1</id>
+      <name>My Cool Group</name>
+      <description>my description</description>
+    </groups-created>
+    <groups-created>
+      <id type="integer">2</id>
+      <name>My Cool Group</name>
+      <description>my description</description>
+    </groups-created>
+  </groups-created>
+  <groups-member-of type="array"/>
+  <groups-invited-to type="array"/>
+  <places type="array">
+    <place>
+      <name>Max's Place</name>
+      <description>a test place</description>
+      <location>
+        <latitude type="float">53.34410399999999</latitude>
+        <longitude type="float">-6.267493699999932</longitude>
+        <city>Dublin</city>
+        <country>Ireland</country>
+      </location>
+    </place>
+  </places>
+  <location-posts type="array"/>
+  <devices type="array"/>
+  <notifications type="array"/>
+  <identities type="array">
+    <identity>
+      <id type="integer">1</id>
+      <provider type="symbol">facebook</provider>
+      <provider-id>596263177</provider-id>
+    </identity>
+  </identities>
+</me>

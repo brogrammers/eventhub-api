@@ -1,5 +1,6 @@
 EventhubApi::Application.routes.draw do
 
+  apipie
   use_doorkeeper
 
   namespace :api do

@@ -9,7 +9,6 @@ gem 'sqlite3'
 
 gem 'pg'
 
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -50,3 +49,4 @@ gem 'strong_parameters'
 gem 'geocoder'
 gem 'simple_enum'
 gem 'therubyracer'
+gem 'apipie-rails'
