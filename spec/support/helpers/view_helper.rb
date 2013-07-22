@@ -40,6 +40,43 @@ module ViewHelper
     render_view @place, :object => 'me', :partial => 'place', :object_name => 'place'
   end
 
+  def render_places_show_view_json
+    @place = places :one
+    render_view @place, :object => 'places', :partial => 'show', :object_name => 'place'
+  end
+
+  def render_places_index_view_json
+    @places = [ ]
+    @places << places(:one)
+    @places << places(:two)
+    render_view @places, :object => 'places', :partial => 'index', :object_name => 'places'
+  end
+
+  def render_places_create_view_json
+    @place = places :one
+    render_view @place, :object => 'places', :partial => 'create', :object_name => 'place'
+  end
+
+  def render_places_delete_view_json
+    @place = places :one
+    render_view @place, :object => 'places', :partial => 'destroy', :object_name => 'place'
+  end
+
+  def render_places_location_view_json
+    @location = locations :one
+    render_view @location, :object => 'places', :partial => 'location', :object_name => 'location'
+  end
+
+  def render_places_creator_view_json
+    @user = users :one
+    render_view @user, :object => 'places', :partial => 'creator', :object_name => 'creator'
+  end
+
+  def render_places_comment_view_json
+    @comment = comments :one
+    render_view @comment, :object => 'places', :partial => 'comment', :object_name => 'comment'
+  end
+
   def render_errors_record_invalid
     @place = places :one
     render_view @place, :object => 'errors', :partial => 'record_invalid', :object_name => 'error'
@@ -50,8 +87,14 @@ module ViewHelper
     render_view @place, :object => 'errors', :partial => 'record_not_found', :object_name => 'error'
   end
 
+  def render_errors_not_privileged_error
+    @place = places :one
+    render_view @place, :object => 'errors', :partial => 'not_privileged_error', :object_name => 'error'
+  end
+
   def render_view(object, options = { })
     @rendered_view = JSON.parse(Rabl::Renderer.json(object, "api/v1/#{options[:object]}/#{options[:partial]}"))[options[:object_name] || options[:object]]
+    @rendered_view = @rendered_view[0] if @rendered_view.is_a? Array
   end
 
   def key_exists?(key)

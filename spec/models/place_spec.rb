@@ -3,6 +3,32 @@ require 'spec_helper'
 describe Place do
   fixtures :core_users, :users, :places, :comments, :offers, :events, :locations
 
+  context '#all_within' do
+
+    it 'should query all places within a location' do
+      Place.all_within(53.344103999999990000, -6.267493699999932000, 1).size.should == 1
+    end
+
+  end
+
+  context '#can_be_modified_by?' do
+
+    it 'should return true if the user is the creator' do
+      place = places :one
+      user = users :one
+      place.can_be_seen_by?(user).should == true
+    end
+
+  end
+
+  context '#can_be_seen_by?' do
+
+    it 'should return true if the user is allowed to the place' do
+      pending 'need a proper way to figure out if a user can see a private place'
+    end
+
+  end
+
   context 'comment' do
 
     it 'should possible to comment on a place' do
@@ -151,7 +177,8 @@ describe Place do
 
     it 'should not be possible to create a place with type other than private / public / certified' do
       place = places :one
-      expect { place.visibility_type = :invalid }.to raise_error(ArgumentError)
+      place.visibility_type = :invalid
+      place.valid?.should == false
     end
 
     it 'should not be possible to create a place without any type' do
