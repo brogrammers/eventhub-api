@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'api/v1/me/show' do
+describe 'api/v1/me/index' do
   fixtures :core_users,
            :users,
            :business_users,
