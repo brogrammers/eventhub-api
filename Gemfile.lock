@@ -73,6 +73,7 @@ GEM
     multiple_table_inheritance (0.2.1)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
+    pg (0.15.1)
     polyglot (0.3.3)
     rabl (0.8.5)
       activesupport (>= 2.3.14)
@@ -157,6 +158,7 @@ DEPENDENCIES
   jquery-rails
   koala
   multiple_table_inheritance
+  pg
   rabl
   rails (= 3.2.13)
   rspec
