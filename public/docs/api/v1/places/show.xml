@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<place>
+  <id type="integer">1</id>
+  <name>Max's Place</name>
+  <description>a test place</description>
+  <visibility-type type="symbol">public</visibility-type>
+  <location>
+    <latitude type="float">53.34410399999999</latitude>
+    <longitude type="float">-6.267493699999932</longitude>
+    <city>Dublin</city>
+    <country>Ireland</country>
+  </location>
+  <creator>
+    <id type="integer">1</id>
+    <name>Max Hoffmann</name>
+  </creator>
+  <comments type="array"/>
+</place>
