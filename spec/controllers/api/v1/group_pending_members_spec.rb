@@ -24,4 +24,53 @@ describe Api::V1::GroupPendingMembersController do
     controller.stub(:doorkeeper_token) { token }
   end
 
+
+  context 'GET index' do
+
+    context 'with valid attributes' do
+
+    end
+
+    context 'with invalid attributes' do
+
+    end
+
+  end
+
+  context 'GET show' do
+
+    context 'with invalid attribues' do
+
+    end
+
+    context 'with invalid attributes' do
+
+    end
+
+  end
+
+
+  context 'POST create' do
+
+    context 'with valid attributes' do
+
+    end
+
+    context 'with invalid attributes' do
+
+    end
+
+  end
+
+  context 'DELETE destroy' do
+
+    context 'with invalid attributes' do
+
+    end
+
+    context 'with invalid attributes' do
+
+    end
+
+  end
 end

@@ -28,11 +28,6 @@ class Group < ActiveRecord::Base
     user == creator or members.include? user or invited.include? user
   end
 
-  def generate_chatroom
-    self.chatroom = Chatroom.new
-    self.chatroom.group = self
-  end
-
   def invite_user!(user, by_user)
     if user.is_member_of? self or user.is_invited_to? self or not user.is_friend_of? by_user
       false
@@ -44,10 +39,12 @@ class Group < ActiveRecord::Base
 
   def accept_invitation(user)
     if user.is_invited_to? self
-      invited.delete user
-      members << user
+      self.members << user
+      self.invited.delete user
+      self.save!
+      user
     else
-      false
+       raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 
@@ -59,4 +56,24 @@ class Group < ActiveRecord::Base
       false
     end
   end
+
+  def remove_member(member, by_user)
+    if member == by_user or by_user == creator
+      if member.is_member_of? self
+        self.members.delete member
+        self.save!
+      else
+        raise ActiveRecord::RecordNotFound
+      end
+    else
+       raise ActiveRecord::RecordInvalid.new(self)
+    end
+
+  end
+
+  def generate_chatroom
+    self.chatroom = Chatroom.new
+    self.chatroom.group = self
+  end
+
 end

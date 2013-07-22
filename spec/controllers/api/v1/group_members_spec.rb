@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+
+#tests are divided per action per current_user possibity
+
 describe Api::V1::GroupMembersController do
 
   render_views
@@ -24,185 +27,670 @@ describe Api::V1::GroupMembersController do
     controller.stub(:doorkeeper_token) { token }
   end
 
-  describe 'GET index' do
-    context 'with valid parameters' do
-      it 'should return group members if current user is a creator' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.creator
-        get :index, :group_id => group.id
-        assigns(:members).should match_array(group.members)
-        assigns(:group).should == group
-      end
+  let(:group) {
+    group = create(:group)
+    group.members = create_list(:user, 3)
+    group.invited << create(:user)
+    group
+  }
 
-      it 'should return group members if current user is a member' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.members[0]
-        get :index, :group_id => group.id
-        assigns(:members).should match_array(group.members)
-        assigns(:group).should == group
-      end
+  describe 'on GET index' do
+    context 'with valid arguments' do
 
-      it 'should return group members if current user is invited' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        group.invited << create(:user)
-        controller.current_user = group.invited[0]
-        get :index, :group_id => group.id
-        assigns(:members).should match_array(group.members)
-        assigns(:group).should == group
-      end
+      3.times do |index|
+        before(:each) do
+          users = [group.creator, group.members[0], group.invited[0]]
+          controller.current_user = users[index]
+          get :index, :group_id => group.id
+        end
 
-      it 'should return 200' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.creator
-        get :index, :group_id => group.id
-        response.response_code.should == 200
-      end
+        context "when current user is #{ %w(creator member invited non_related)[index] }" do
 
-      it 'should render index template' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.creator
-        get :index, :group_id => group.id
-        response.should render_template(:index)
+          it 'finds the right group' do
+            assigns(:group).should eq group
+          end
+
+          it 'finds the right members' do
+            assigns(:members).should match_array group.members
+          end
+
+          it 'renders index template' do
+            response.should render_template :index
+          end
+
+          it 'responds with 200' do
+            response.response_code.should eq 200
+          end
+        end
       end
     end
 
     context 'with invalid parameters' do
-      it 'should return 404 if user should not see a group' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = create(:user)
-        get :index, :group_id => group.id
-        response.response_code.should == 404
-      end
+      context 'where group is not found' do
 
-      it 'should return 404 if group with specified id does not exist' do
-        get :index, :group_id => -1
-        response.response_code.should == 404
-      end
+        4.times do |index|
+          before (:each) do
+            users = [group.creator, group.members[0], group.invited[0], create(:user)]
+            controller.current_user = users[index]
+            get :index, :group_id => -1
+          end
 
-      it 'should not render index template' do
-        get :index, :group_id => -1
-        response.should_not render_template(:index)
-      end
+          context "when current user is #{ %w(creator member invited non_related)[index] }" do
+            it 'does not find a group' do
+              assigns(:group).should be_nil
+            end
 
-      it 'should render not found template in case of 404' do
-        get :index, :group_id => -1
-        response.should render_template(:record_not_found)
+            it 'does not find members' do
+              assigns(:members).should be_nil
+            end
+
+            it 'does not render index template' do
+             response.should_not render_template :index
+            end
+
+            it 'renders record not found' do
+              response.should render_template :record_not_found
+            end
+
+            it 'responds with 200' do
+              response.status.should eq 404
+            end
+          end
+
+        end
+
+        context 'non reladed shows members' do
+
+          before (:each) do
+            controller.current_user = create(:user)
+            get :index, :group_id => group.id
+          end
+
+          it 'does not find group' do
+            assigns(:group).should be_nil
+          end
+
+          it 'does not find members' do
+            assigns(:members).should be_nil
+          end
+
+          it 'renders record not found template' do
+            response.should render_template :record_not_found
+          end
+
+          it 'responds with 200' do
+            response.response_code.should eq 404
+          end
+        end
       end
     end
   end
 
   describe 'GET show' do
+
     context 'with valid parameters' do
-      it 'should return member with specified id if current user is a member' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.members[0]
-        get :show, :group_id => group.id, :id => group.members[2].id
-        assigns(:member).should == group.members[2]
-        assigns(:group).should == group
-      end
 
-      it 'should return member with specified id if current user is invited' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        group.invited << create(:user)
-        controller.current_user = group.invited[0]
-        get :show, :group_id => group.id, :id => group.members[2].id
-        assigns(:member).should == group.members[2]
-        assigns(:group).should == group
-      end
+      3.times do |index|
+        before :each do
+          users = [group.creator, group.members[0], group.invited[0], create(:user)]
+          controller.current_user = users[index]
+          get :show, :group_id => group.id, :id => group.members[1]
+        end
 
-      it 'shoult return member with specified id if current user is creator' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.creator
-        get :show, :group_id => group.id, :id => group.members[2].id
-        assigns(:member).should == group.members[2]
-        assigns(:group).should == group
-      end
+        context "when current user is #{ %w(creator member invited non_related)[index] }" do
+          it 'finds the right group' do
+            assigns(:group).should eq group
+          end
 
-      it 'should return 200' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.creator
-        get :show, :group_id => group.id, :id => group.members[2].id
-        response.response_code.should == 200
-      end
+          it 'finds the right member' do
+            assigns(:member).should eq group.members[1]
+          end
 
-      it 'should render show template' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = group.creator
-        get :show, :group_id => group.id, :id => group.members[2].id
-        response.should render_template(:show)
+          it 'renders show template' do
+            response.should render_template :show
+          end
+
+          it 'responds with 200' do
+            response.response_code.should eq 200
+          end
+        end
       end
     end
 
     context 'with invalid parameters' do
 
-      it 'should return 404 if group does not exist' do
-        get :show, :group_id => -1, :id => -1
-        response.response_code.should == 404
+      context 'where group does not exist' do
+        4.times do |index|
+          before :each do
+            users = [group.creator, group.members[1], group.invited[0], create(:user)]
+            controller.current_user = users[index]
+            get :show, :group_id => -1, :id => group.members[0]
+          end
+
+          context "when current user is #{ %w(creator member invited non_related)[index] }" do
+            it 'does not find the group' do
+              assigns(:group).should be_nil
+            end
+
+            it 'it does not find the member' do
+              assigns(:member).should eq nil
+            end
+
+            it 'renders record_not_found' do
+              response.should render_template :record_not_found
+            end
+
+            it 'responds with 404' do
+              response.response_code.should eq 404
+            end
+          end
+        end
       end
 
-      it 'should return 404 if user is not supposed to see a group' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = create(:user)
-        get :show, :group_id => group.id, :id => group.members[2].id
-        response.response_code.should == 404
+      context 'where member does not exist' do
+        4.times do |index|
+          before :each do
+            users = [group.creator, group.members[1], group.invited[0], create(:user)]
+            controller.current_user = users[index]
+            get :show, :group_id => group.id, :id => -1
+          end
+
+          context "when current user is #{ %w(creator member invited non_related)[index] }" do
+            it 'finds the right group' do
+              assigns(:group).should eq group
+            end
+
+            it 'does not find the member' do
+              assigns(:member).should be_nil
+            end
+
+            it 'renders record not found' do
+              response.should render_template :record_not_found
+            end
+
+            it 'responds with 404' do
+              response.response_code.should eq 404
+            end
+          end
+        end
       end
 
-      it 'should return 404 if member with specified id does not exist' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = create(:user)
-        get :show, :group_id => group.id, :id => group.members[2].id
-        response.response_code.should == 404
-      end
+      context 'and shows a member' do
 
-      it 'should render not found in case of 404' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = create(:user)
-        get :show, :group_id => group.id, :id => group.members[2].id
-        response.should render_template(:record_not_found)
-      end
+        before(:each) do
+          controller.current_user = create(:user)
+          get :show, :group_id => group.id, :id => group.members[0]
+        end
 
-      it 'should not render show' do
-        group = create(:group)
-        group.members += [create(:user), create(:user), create(:user)]
-        controller.current_user = create(:user)
-        get :show, :group_id => group.id, :id => group.members[2].id
-        response.should_not render_template(:show)
+        it 'does not find group' do
+          assigns(:group).should be_nil
+        end
+        it 'does not find member' do
+          assigns(:member).should be_nil
+        end
+
+        it 'renders record not found' do
+          response.should render_template :record_not_found
+        end
+
+        it 'responds with 404' do
+           response.response_code.should eq 404
+        end
       end
     end
+
   end
 
   describe 'POST create' do
+
+    before(:each) do
+      @members_created = 3
+      @invited_created = 3
+      @group = create(:group)
+      @group.members = create_list(:user, @members_created)
+      @group.invited = create_list(:user, @invited_created)
+    end
+
     context 'with valid parameters' do
+
+      context 'and curent user is invited' do
+
+        before (:each) do
+          controller.current_user = @group.invited[0]
+          post :create, :group_id => @group.id
+        end
+
+        it 'finds the right group' do
+          assigns(:group).should eq @group
+        end
+
+        it 'finds a right member' do
+          assigns(:member).should eq @group.invited[0]
+        end
+
+        it 'responds with 200' do
+          response.response_code.should eq 200
+        end
+
+        it 'renders create template' do
+          response.should render_template :create
+        end
+
+        it 'adds a member' do
+          @group.reload.members.size.should eq @members_created +1
+        end
+
+        it 'removes invited' do
+          @group.reload.invited.size.should eq @invited_created -1
+        end
+
+      end
 
     end
 
     context 'with invalid parameters' do
 
+      context 'where current user is creator' do
+
+        context 'and group is not found' do
+
+          before(:each) do
+            controller.current_user = @group.creator
+            post :create, :group_id => -1
+          end
+
+          it { assigns(:group).should be_nil }
+
+          it { assigns(:member).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 404 }
+
+          it { response.should render_template :record_not_found }
+
+        end
+
+        context 'and tries to create a member' do
+
+          before(:each) do
+            controller.current_user = @group.creator
+            post :create, :group_id => @group.id
+          end
+
+          it { assigns(:group).should eq @group }
+
+          it { assigns(:member).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 400 }
+
+          it { response.should render_template :record_invalid }
+
+        end
+
+      end
+
+      context 'where current user is member' do
+
+        context 'and group is not found' do
+
+          before(:each) do
+            controller.current_user = @group.members[0]
+            post :create, :group_id => -1
+          end
+
+          it { assigns(:group).should be_nil }
+
+          it { assigns(:members).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 404 }
+
+          it { response.should render_template :record_not_found }
+
+        end
+
+        context 'and creates a member' do
+
+          before(:each) do
+            controller.current_user = @group.members[0]
+            post :create, :group_id => @group.id
+          end
+
+          it { assigns(:group).should eq @group }
+
+          it { assigns(:member).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 400 }
+
+          it { response.should render_template :record_invalid }
+
+        end
+
+      end
+
+      context 'where current user is invited' do
+
+        context 'and group is not found' do
+
+          before(:each) do
+            controller.current_user = @group.invited[0]
+            post :create, :group_id => -1
+          end
+
+          it { assigns(:group).should be_nil }
+
+          it { assigns(:member).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 404 }
+
+          it { response.should render_template :record_not_found }
+
+
+        end
+
+      end
+
+      context 'where current user is not related' do
+
+        context 'and group is not found' do
+
+          before(:each) do
+            controller.current_user = create(:user)
+            post :create, :group_id => -1
+          end
+
+          it { assigns(:group).should be_nil }
+
+          it { assigns(:member).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 404 }
+
+          it { response.should render_template :record_not_found}
+
+        end
+
+        context 'and tries to create a member' do
+
+          before(:each) do
+            controller.current_user = create(:user)
+            post :create, :group_id => @group.id
+          end
+
+          it { assigns(:group).should be_nil }
+
+          it { assigns(:member).should be_nil }
+
+          it { @group.reload.members.size.should eq @members_created }
+
+          it { @group.reload.invited.size.should eq @invited_created }
+
+          it { response.response_code.should eq 404 }
+
+          it { response.should render_template :record_not_found }
+
+        end
+
+      end
+
     end
+
   end
 
   describe 'DELETE destroy' do
+
+    before(:each) do
+      @members_created = 3
+      @group = create(:group)
+      @group.members = create_list(:user, @members_created)
+      @group.invited << create(:user)
+    end
+
     context 'with valid parameters' do
+
+      context 'where current user is creator' do
+
+        context 'and deletes a member' do
+
+          before(:each) do
+            controller.current_user = @group.creator
+            delete :destroy, :group_id => @group.id, :id => @group.members[0].id
+          end
+
+          it { assigns(:group).should eq @group }
+          it { assigns(:member).should eq @group.members[0] }
+          it { @group.members(true).size.should eq @members_created - 1 }
+          it { response.response_code.should eq 200 }
+          it { response.should render_template :destroy }
+
+        end
+
+      end
+
+      context 'and current user is a member' do
+
+          before(:each) do
+            controller.current_user = @group.members[0]
+            delete :destroy, :group_id => @group.id, :id => @group.members[0].id
+          end
+
+          context 'and deletes himself' do
+
+            it { assigns(:group).should eq @group }
+            it { assigns(:member).should eq @group.members[0] }
+            it { response.response_code.should eq 200 }
+            it { response.should render_template :destroy }
+            it { @group.members.reload.size.should eq @members_created - 1 }
+
+          end
+
+      end
 
     end
 
     context 'with invalid parameters' do
 
+      context 'where current user is creator' do
+
+        context 'and group is not found' do
+
+          before (:each) do
+            controller.current_user = @group.creator
+            delete :destroy, :group_id => -1, :id => @group.members[0]
+          end
+
+          it { assigns(:group).should be_nil }
+          it { assigns(:member).should be_nil }
+          it { @group.reload.members.size.should eq @members_created }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template :record_not_found}
+
+        end
+
+        context 'and member is not found' do
+
+          before (:each) do
+            controller.current_user = @group.creator
+            delete :destroy, :group_id => @group.id, :id => -1
+          end
+
+          it { assigns(:group).should eq @group }
+          it { assigns(:member).should be_nil }
+          it { @group.reload.members.size.should eq @members_created }
+          it { response.response_code.should eq 404}
+          it { response.should render_template :record_not_found }
+
+        end
+
+      end
+
+      context 'where current user is member' do
+
+        context 'and deletes other member' do
+
+          before (:each) do
+            controller.current_user = @group.members[0]
+            delete :destroy, :group_id => @group.id, :id => @group.members[1]
+          end
+
+          it { assigns(:group).should eq @group }
+          it { assigns(:member).should eq @group.members[1] }
+          it { @group.members.size.should eq @members_created }
+          it { response.response_code.should eq 400 }
+          it { response.should render_template :record_invalid }
+
+        end
+
+        context 'and member does not exist' do
+
+          before (:each) do
+            controller.current_user = @group.members[0]
+            delete :destroy, :group_id => @group.id, :id => -1
+          end
+
+          it { assigns(:group).should eq @group }
+          it { assigns(:member).should be_nil }
+          it { @group.reload.members.size.should eq @members_created }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template :record_not_found }
+
+        end
+
+        context 'and group does not exist' do
+
+          before (:each) do
+            controller.current_user = @group.members[0]
+            delete :destroy, :group_id => -1, :id => @group.members[1]
+          end
+
+          it { assigns(:group).should be_nil }
+          it { assigns(:member).should be_nil }
+          it { @group.reload.members.size.should eq @members_created }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template :record_not_found }
+
+        end
+
+      end
+
+      context 'where current user is invited' do
+
+        context 'and deletes a member' do
+
+          before (:each) do
+            controller.current_user = @group.invited[0]
+            delete :destroy, :group_id => @group.id, :id => @group.members[0]
+          end
+
+          it { assigns(:group).should eq @group }
+          it { assigns(:member).should eq @group.members[0] }
+          it { @group.members.size.should eq @members_created }
+          it { response.response_code.should eq 400 }
+          it { response.should render_template :record_invalid }
+
+        end
+
+        context 'and member does not exist' do
+
+          before (:each) do
+            controller.current_user = @group.invited[0]
+            delete :destroy, :group_id => @group.id, :id => -1
+          end
+
+          it { assigns(:group).should eq @group }
+          it { assigns(:member).should be_nil }
+          it { @group.reload.members.size.should eq @members_created }
+          it { response.status.should eq 404 }
+          it { response.should render_template :record_not_found }
+
+        end
+
+        context 'and group does not exist' do
+
+          before (:each) do
+            controller.current_user = @group.invited[0]
+            delete :destroy, :group_id => -1, :id => @group.members[0]
+          end
+
+          it { assigns(:group).should be_nil }
+          it { assigns(:member).should be_nil }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template :record_not_found }
+          it { @group.members.size.should eq @members_created }
+
+        end
+
+      end
+
+      context 'where current user is not related' do
+
+        context 'and deletes a member' do
+
+          before (:each) do
+            controller.current_user = create(:user)
+            delete :destroy, :group_id => @group.id, :id => @group.members[0]
+          end
+
+          it { assigns(:group).should be_nil }
+          it { assigns(:member).should be_nil }
+          it { @group.members.size.should eq @members_created }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template :record_not_found }
+
+
+        end
+
+        context 'and member does not exist' do
+
+          before (:each) do
+            controller.current_user = create(:user)
+            delete :destroy, :group_id => @group.id, :id => -1
+          end
+
+          it { assigns(:group).should be_nil }
+          it { assigns(:member).should be_nil }
+          it { @group.members.size.should eq @members_created }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template(:record_not_found) }
+
+        end
+
+        context 'and group does not exist' do
+
+          before (:each) do
+            controller.current_user = create(:user)
+            delete :destroy, :group_id => -1, :id => group.members[0]
+          end
+
+          it { assigns(:group).should be_nil }
+          it { assigns(:member).should be_nil }
+          it { @group.reload.members.size.should eq @members_created }
+          it { response.response_code.should eq 404 }
+          it { response.should render_template :record_not_found }
+
+        end
+      end
     end
   end
-
 end
