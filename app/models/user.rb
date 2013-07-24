@@ -20,5 +20,5 @@ class User < ActiveRecord::Base
 
   has_many :location_posts, :dependent => :destroy
 
-  validates :availability, :registered, :registered_at, :presence => true
+  validates :registered, :registered_at, :presence => true
 end
