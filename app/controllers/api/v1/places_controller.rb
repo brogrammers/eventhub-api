@@ -2,6 +2,14 @@ module Api
   module V1
     class PlacesController < BaseController
 
+      resource_description do
+        name 'Places'
+        short_description 'Everything about the Places resource'
+        path '/places'
+        description 'The Places Resource lets you query, create and update places. ' +
+          'Not that certified places can only be created or modified with an appropriate access token scope'
+      end
+
       doorkeeper_for :index, :create, :update, :show, :destroy
       before_filter :place_create_params, only: :create
       before_filter :place_index_params, only: :index
