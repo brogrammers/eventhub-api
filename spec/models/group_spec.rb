@@ -207,7 +207,7 @@ describe Group do
     it 'should create a chatroom unless a chatroom exists' do
       group = groups :two
       group.chatroom = nil
-      expect{ group.save! }.not_to raise_error(ActiveRecord::RecordInvalid)
+      expect{ group.save! }.not_to raise_error()
       group.chatroom.class.should == Chatroom
     end
 
