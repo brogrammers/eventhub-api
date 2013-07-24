@@ -3,6 +3,10 @@ class ApplicationController < ActionController::Base
 
   respond_to :json, :xml
 
+  resource_description do
+    api_versions 'v1'
+  end
+
   rescue_from ActiveRecord::RecordInvalid do |exception|
     @object = exception.record
     render status: 400, template: 'api/v1/errors/record_invalid'
