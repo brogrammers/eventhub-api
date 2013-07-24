@@ -1,12 +1,4 @@
 GIT
-  remote: git@github.com:tsov/apipie-rails.git
-  revision: d1a3e9e541191b41ce615ae5e5ff6b9ecc52641a
-  branch: responsive-design
-  specs:
-    apipie-rails (0.0.22)
-      rails (>= 3.0.10)
-
-GIT
   remote: git@github.com:tsov/doorkeeper.git
   revision: 579eb8f10d289378fc5f0d1e1d379263f1e3803f
   specs:
@@ -44,6 +36,8 @@ GEM
       i18n (= 0.6.1)
       multi_json (~> 1.0)
     addressable (2.3.5)
+    apipie-rails (0.0.22)
+      rails (>= 3.0.10)
     arel (3.0.2)
     builder (3.0.4)
     capistrano (2.15.5)
@@ -180,7 +174,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  apipie-rails!
+  apipie-rails
   capistrano
   coffee-rails (~> 3.2.1)
   doorkeeper (~> 0.6.7)!
