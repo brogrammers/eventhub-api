@@ -19,6 +19,14 @@ FactoryGirl.define do
     name 'group name'
     description 'group description'
     group.association :creator, factory: :user
+
+    factory :group_with_members_and_invited do
+      after(:build) do |group|
+        group.invited = create_list(:user, 1)
+        group.members = create_list(:user, 3)
+      end
+    end
+
   end
 
   factory :user do

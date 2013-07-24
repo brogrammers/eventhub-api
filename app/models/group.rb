@@ -66,7 +66,7 @@ class Group < ActiveRecord::Base
         raise ActiveRecord::RecordNotFound
       end
     else
-       raise ActiveRecord::RecordInvalid.new(self)
+      raise ActiveRecord::RecordInvalid.new(self)
     end
 
   end
