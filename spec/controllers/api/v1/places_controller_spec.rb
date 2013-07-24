@@ -20,7 +20,7 @@ describe Api::V1::PlacesController do
            :comments
 
   owner_id = 1
-  let(:token) { stub :accessible? => true, :resource_owner_id => owner_id }
+  let(:token) { double :accessible? => true, :resource_owner_id => owner_id }
 
   before :each do
     controller.stub(:doorkeeper_token) { token }
