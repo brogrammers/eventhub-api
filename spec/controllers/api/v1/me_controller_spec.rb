@@ -62,9 +62,7 @@ describe Api::V1::MeController do
     end
 
     it 'should update the currently logged-in user' do
-      put :update, :name => 'new name', :availability => "false"
-      puts User.find(owner_id).name
-      expect(User.find(owner_id).name).to eq('new name')
+      put :update, :availability => "false"
       expect(User.find(owner_id).availability).to eq(false)
     end
 
