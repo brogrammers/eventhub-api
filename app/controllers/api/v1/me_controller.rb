@@ -25,10 +25,8 @@ module Api
       api :PUT, '/me', 'Updates the currently logged-in user'
       description 'Updates the profiles of the currently logged-in user, based on the OAuth Access Token provided.'
       formats [:json, :xml]
-      param :name, String, 'Name of the user'
       param :availability, String, 'Availability of the user', :required => true
       def update
-        @current_user.name = params[:name] || @current_user.name
         @current_user.availability = params[:availability]
         @current_user.save!
         respond_with @current_user
@@ -38,7 +36,6 @@ module Api
 
       def me_update_params
         params.require(:availability)
-        params.permit(:name)
       end
     end
   end
