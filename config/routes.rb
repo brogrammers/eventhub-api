@@ -5,7 +5,8 @@ EventhubApi::Application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :me, :only => [:index]
+      get '/me', :to => 'me#index'
+      put '/me', :to => 'me#update'
       resources :places, :only => [:index, :show, :create, :update, :destroy]
     end
   end
