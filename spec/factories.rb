@@ -27,6 +27,12 @@ FactoryGirl.define do
       end
     end
 
+    factory :group_with_members_and_more_invited do
+      after(:build) do |group|
+        group.invited = create_list(:user, 3)
+        group.members = create_list(:user, 3)
+      end
+    end
   end
 
   factory :user do

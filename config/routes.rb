@@ -6,7 +6,7 @@ EventhubApi::Application.routes.draw do
       resources :me, :only => [:index]
       resources :groups do
         resources :members, :controller => 'group_members'
-        resources :invited, :controller => 'group_pending_memebrs'
+        resources :invited, :controller => 'group_pending_members'
         resources :messages, :controller =>'group_messages'
       end
     end

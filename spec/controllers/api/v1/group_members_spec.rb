@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-
-#tests are divided per action per current_user possibity
-
 describe Api::V1::GroupMembersController do
 
   render_views
@@ -44,7 +41,7 @@ describe Api::V1::GroupMembersController do
           get :index, :group_id => group.id
         end
 
-        context "when current user is #{ %w(creator member invited non_related)[index] }" do
+        context "when current user is #{ %w(creator member invited)[index] }" do
 
           it 'finds the right group' do
             assigns(:group).should eq group
@@ -61,6 +58,7 @@ describe Api::V1::GroupMembersController do
           it 'responds with 200' do
             response.response_code.should eq 200
           end
+
         end
       end
     end
