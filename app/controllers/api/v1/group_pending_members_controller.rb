@@ -3,57 +3,44 @@ module Api
     class GroupPendingMembersController < BaseController
 
       doorkeeper_for :index, :create, :update, :show, :destroy
-      before_filter :can_user_access_group?, :only => [:index, :show, :create, :update, :destroy]
+      before_filter :can_user_access_group?
+      before_filter :can_user_invite_user?, :only => [:create]
 
       def index
-        Group.find params[:group_id]
+        @group = Group.find params[:group_id]
+        @invited = @group.invited
+        respond_with @invited
       end
 
       def show
-        group = Group.find params[:group_id]
-        group.invited.find params[:id]
+        @group = Group.find params[:group_id]
+        @invited = @group.invited.find params[:id]
+        respond_with @invited
       end
 
       def create
-        group = Group.find params[:group_id]
-        user = User.find invite_params
-        if group.invite_user! user, @current_user
-           user
-        else
-            raise ActiveRecord::RecordInvalid
-        end
+        @group = Group.find params[:group_id]
+        @invited = @group.invite_user (User.find params[:user_id]), @current_user
+        respond_with @invited
       end
 
-      def update
-        group = Group.find params[:group_id]
-        if acceptance_params[:accepted] == 'true'
-          if group.accept_invitation @current_user
-            @current_user
-          else
-            raise ActiveRecord::RecordNotFound
-          end
-        elsif acceptance_params[:accepted] == 'false'
-          if group.decline_invitation @current_user
-            @current_user
-          else
-            raise ActiveRecord::RecordNotFound
-          end
-        end
+      def destroy
+        @group = Group.find params[:group_id]
+        @invited = User.find params[:id]
+        @group.invited.delete @invited if @current_user == @invited or @current_user == @group.creator
+        respond_with @invited
       end
 
       private
 
       def can_user_access_group?
-        @group = Group.find params[:id]
-        ActiveRecord::RecordNotFound  unless @group.can_be_seen_by? @current_user
+        group = Group.find params[:group_id]
+        raise ActiveRecord::RecordNotFound unless group.can_be_seen_by? @current_user
       end
 
-      def invite_params
-        params.permit(:user_id)
-      end
-
-      def acceptance_params
-        params.permit(:accepted)
+      def can_user_invite_user?
+        user = User.find params[:user_id]
+        raise ActiveRecord::RecordNotFound unless @current_user.is_friend_of? user
       end
 
     end

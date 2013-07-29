@@ -25,7 +25,7 @@ describe Api::V1::GroupMessagesController do
   end
 
 
-  context 'GET api/v1/groups/:group_id/messages' do
+  context 'GET index' do
     context 'with valid parameters' do
       it 'returns all messages of the groups chatroom' do
         message = create(:message)
@@ -52,7 +52,7 @@ describe Api::V1::GroupMessagesController do
 
       it 'returns not found when group with specified id does not exist' do
         group = create(:group)
-        expect get :index, :group_id => group.id - 1
+        expect get :index, :group_id => -1
         response.status.should == 404
       end
 
@@ -62,7 +62,7 @@ describe Api::V1::GroupMessagesController do
     end
   end
 
-  context 'GET api/v1/groups/:group_id/messages/:id' do
+  context 'GET show' do
     context 'with valid parameters' do
        it 'returns message with specified id of the groups chatroom' do
          message = FactoryGirl.create :message
@@ -73,8 +73,9 @@ describe Api::V1::GroupMessagesController do
 
        it 'renders correct template' do
          message = create(:message)
+         controller.current_user = message.chatroom.group.creator
          get :show, :group_id => message.chatroom.group.id, :id => message.id
-         response.should render_template('show')
+         response.should render_template(:show)
        end
     end
 
@@ -105,7 +106,7 @@ describe Api::V1::GroupMessagesController do
     end
   end
 
-  context 'POST api/v1/groups/:group_id/messages' do
+  context 'POST create' do
     context 'with valid parameters' do
       it 'creates new message' do
         group = create(:group)
@@ -133,7 +134,7 @@ describe Api::V1::GroupMessagesController do
 
       it 'returns not found when group with specified id does not exist' do
         group = create(:group)
-        get :index, :group_id => group.id - 1, :id => 1
+        get :index, :group_id => -1, :id => 1
         response.status.should == 404
       end
 

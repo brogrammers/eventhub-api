@@ -27,7 +27,7 @@ describe Api::V1::GroupsController do
       it 'should return all groups' do
         groups = [create(:group), create(:group), create(:group)]
         get :index
-        assigns(:groups).should match_array groups
+        assigns(:groups).should include(groups[0], groups[1], groups[2])
       end
 
       it 'should return 200' do

@@ -2,7 +2,7 @@ module Api
   module V1
     class GroupMembersController < BaseController
 
-      doorkeeper_for :index, :show, :destroy
+      doorkeeper_for :index, :show, :create, :destroy
       before_filter :can_user_access_group?
 
       def index

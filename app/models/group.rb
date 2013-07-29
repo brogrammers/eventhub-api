@@ -28,12 +28,17 @@ class Group < ActiveRecord::Base
     user == creator or members.include? user or invited.include? user
   end
 
-  def invite_user!(user, by_user)
-    if user.is_member_of? self or user.is_invited_to? self or not user.is_friend_of? by_user
-      false
+  def invite_user(user, by_user)
+    if by_user == creator or by_user.is_member_of? self
+      if not (user.is_invited_to? self) and not (user.is_member_of? self) and not user == creator
+        self.invited << user
+        self.save!
+        user
+      else
+        raise ActiveRecord::RecordInvalid.new(self)
+      end
     else
-      invited << user
-      true
+      raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 
